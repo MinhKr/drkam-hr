@@ -1,0 +1,366 @@
+@import "tailwindcss";
+
+/* =====================================================================
+   HỆ DESIGN TOKEN — 3 lớp: primitive → semantic → component
+   Màu lấy từ CSS thật của drkam.vn:
+     --fs-color-primary   #D32027   (đỏ chủ đạo)
+     hover                #B70F1B
+     --fs-color-secondary #C05530   (cam đất)
+     --fs-color-success   #627D47   (xanh olive)
+     --fs-color-alert     #B20000
+   Font thương hiệu: Montserrat
+   ===================================================================== */
+
+/* ---------------------------------------------------- 1. PRIMITIVE */
+:root {
+  /* đỏ thương hiệu */
+  --red-50:  #FDECEC;
+  --red-100: #FAD5D6;
+  --red-200: #F3ABAD;
+  --red-400: #E14C52;
+  --red-500: #D32027;
+  --red-600: #B70F1B;
+  --red-700: #8E0B15;
+
+  /* cam đất — màu phụ của thương hiệu */
+  --clay-50:  #FBEEE8;
+  --clay-100: #F5D9CC;
+  --clay-500: #C05530;
+  --clay-600: #9E4325;
+
+  /* xanh olive — trạng thái tốt */
+  --olive-50:  #EEF3E7;
+  --olive-100: #DCE7CC;
+  --olive-500: #627D47;
+  --olive-600: #4C6335;
+
+  /* hổ phách — cảnh báo */
+  --amber-50:  #FBF1DC;
+  --amber-100: #F5E2B8;
+  --amber-500: #B7791F;
+  --amber-600: #92600F;
+
+  /* trung tính ngả ấm để hợp với đỏ, không dùng xám thuần */
+  --n-0:   #FFFFFF;
+  --n-25:  #FCFAFA;
+  --n-50:  #F8F5F5;
+  --n-100: #F1EDED;
+  --n-200: #E4DEDE;
+  --n-300: #D2CACA;
+  --n-400: #A79D9D;
+  --n-500: #7C7272;
+  --n-600: #5B5252;
+  --n-700: #403939;
+  --n-800: #2A2424;
+  --n-900: #191515;
+  --n-950: #100D0D;
+
+  /* thang chữ */
+  --text-2xs: 0.6875rem;
+  --text-xs:  0.75rem;
+  --text-sm:  0.8125rem;
+  --text-base: 0.875rem;
+  --text-md:  0.9375rem;
+  --text-lg:  1.0625rem;
+  --text-xl:  1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+
+  /* bo góc & đổ bóng */
+  --r-sm: 6px;
+  --r-md: 8px;
+  --r-lg: 12px;
+  --r-xl: 16px;
+  --shadow-xs: 0 1px 2px rgb(25 21 21 / 0.05);
+  --shadow-sm: 0 1px 3px rgb(25 21 21 / 0.07), 0 1px 2px rgb(25 21 21 / 0.04);
+  --shadow-md: 0 4px 12px -2px rgb(25 21 21 / 0.10), 0 2px 4px -2px rgb(25 21 21 / 0.05);
+  --shadow-lg: 0 12px 32px -8px rgb(25 21 21 / 0.18);
+}
+
+/* ---------------------------------------------------- 2. SEMANTIC (sáng) */
+:root {
+  --background:        var(--n-50);
+  --foreground:        var(--n-900);
+
+  --surface:           var(--n-0);
+  --surface-2:         var(--n-100);
+  --surface-hover:     var(--n-50);
+
+  --ink:               var(--n-900);
+  --ink-2:             var(--n-700);
+  --ink-muted:         var(--n-500);
+  --ink-faint:         var(--n-400);
+
+  --line:              var(--n-200);
+  --line-strong:       var(--n-300);
+
+  --primary:           var(--red-500);
+  --primary-hover:     var(--red-600);
+  --primary-active:    var(--red-700);
+  --primary-fg:        var(--n-0);
+  --primary-soft:      var(--red-50);
+  --primary-soft-fg:   var(--red-700);
+
+  --secondary:         var(--clay-500);
+  --secondary-soft:    var(--clay-50);
+  --secondary-soft-fg: var(--clay-600);
+
+  --success:           var(--olive-500);
+  --success-soft:      var(--olive-50);
+  --success-soft-fg:   var(--olive-600);
+
+  --warning:           var(--amber-500);
+  --warning-soft:      var(--amber-50);
+  --warning-soft-fg:   var(--amber-600);
+
+  --danger:            #B20000;
+  --danger-soft:       var(--red-50);
+  --danger-soft-fg:    #8E0B15;
+
+  --neutral-soft:      var(--n-100);
+  --neutral-soft-fg:   var(--n-600);
+
+  --ring:              var(--red-400);
+
+  /* 5 giai đoạn phễu tuyển dụng */
+  --stage-moi-ve-bg:         var(--n-100);
+  --stage-moi-ve-fg:         var(--n-600);
+  --stage-phong-van-bg:      var(--red-50);
+  --stage-phong-van-fg:      var(--red-600);
+  --stage-cho-quyet-dinh-bg: var(--amber-50);
+  --stage-cho-quyet-dinh-fg: var(--amber-600);
+  --stage-nhan-viec-bg:      var(--olive-50);
+  --stage-nhan-viec-fg:      var(--olive-600);
+  --stage-dung-bg:           var(--n-200);
+  --stage-dung-fg:           var(--n-600);
+}
+
+/* ---------------------------------------------------- 2b. SEMANTIC (tối) */
+.dark {
+  --background:        var(--n-950);
+  --foreground:        var(--n-50);
+
+  --surface:           #171313;
+  --surface-2:         #211C1C;
+  --surface-hover:     #241E1E;
+
+  --ink:               var(--n-50);
+  --ink-2:             var(--n-200);
+  --ink-muted:         var(--n-400);
+  --ink-faint:         var(--n-500);
+
+  --line:              #2E2727;
+  --line-strong:       #413939;
+
+  --primary:           #E8464C;
+  --primary-hover:     #F26A6F;
+  --primary-active:    #FA8A8E;
+  --primary-fg:        #1A1010;
+  --primary-soft:      #3A1315;
+  --primary-soft-fg:   #F7A9AC;
+
+  --secondary:         #D97A54;
+  --secondary-soft:    #35211A;
+  --secondary-soft-fg: #E9A385;
+
+  --success:           #8FAE6E;
+  --success-soft:      #222A19;
+  --success-soft-fg:   #A9C68B;
+
+  --warning:           #D5A153;
+  --warning-soft:      #2E2413;
+  --warning-soft-fg:   #E0B975;
+
+  --danger:            #E8646C;
+  --danger-soft:       #3A1315;
+  --danger-soft-fg:    #F4A0A5;
+
+  --neutral-soft:      #241E1E;
+  --neutral-soft-fg:   var(--n-400);
+
+  --ring:              #E8464C;
+
+  --stage-moi-ve-bg:         #241E1E;
+  --stage-moi-ve-fg:         var(--n-400);
+  --stage-phong-van-bg:      #3A1315;
+  --stage-phong-van-fg:      #F7A9AC;
+  --stage-cho-quyet-dinh-bg: #2E2413;
+  --stage-cho-quyet-dinh-fg: #E0B975;
+  --stage-nhan-viec-bg:      #222A19;
+  --stage-nhan-viec-fg:      #A9C68B;
+  --stage-dung-bg:           #2A2424;
+  --stage-dung-fg:           var(--n-400);
+}
+
+/* ---------------------------------------------------- 3. COMPONENT */
+:root {
+  --sidebar-w:        248px;
+  --sidebar-bg:       var(--n-0);
+  --sidebar-border:   var(--line);
+  --sidebar-item-fg:  var(--ink-2);
+  --sidebar-item-hover-bg: var(--n-50);
+  --sidebar-active-bg: var(--primary-soft);
+  --sidebar-active-fg: var(--primary-soft-fg);
+
+  --topbar-h:         60px;
+  --topbar-bg:        var(--surface);
+
+  --card-bg:          var(--surface);
+  --card-border:      var(--line);
+  --card-radius:      var(--r-lg);
+
+  --field-bg:         var(--surface);
+  --field-border:     var(--line-strong);
+  --field-radius:     var(--r-sm);
+  --field-h:          38px;
+}
+
+.dark {
+  --sidebar-bg:            #171313;
+  --sidebar-item-hover-bg: #211C1C;
+}
+
+/* ------------------------------------------- cầu nối sang Tailwind v4 */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-hover: var(--surface-hover);
+
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-muted: var(--ink-muted);
+  --color-ink-faint: var(--ink-faint);
+
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-active: var(--primary-active);
+  --color-primary-fg: var(--primary-fg);
+  --color-primary-soft: var(--primary-soft);
+  --color-primary-soft-fg: var(--primary-soft-fg);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-soft: var(--secondary-soft);
+  --color-secondary-soft-fg: var(--secondary-soft-fg);
+
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-success-soft-fg: var(--success-soft-fg);
+
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-warning-soft-fg: var(--warning-soft-fg);
+
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-danger-soft-fg: var(--danger-soft-fg);
+
+  --color-neutral-soft: var(--neutral-soft);
+  --color-neutral-soft-fg: var(--neutral-soft-fg);
+
+  --color-sidebar: var(--sidebar-bg);
+  --color-ring: var(--ring);
+
+  --font-sans: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
+
+  /* thang chữ — khai báo ở đây để Tailwind sinh ra text-sm, text-2xl…
+     (dùng text-[var(--text-2xl)] sẽ bị hiểu nhầm thành màu chữ) */
+  --text-2xs: 0.6875rem;
+  --text-xs: 0.75rem;
+  --text-sm: 0.8125rem;
+  --text-base: 0.875rem;
+  --text-md: 0.9375rem;
+  --text-lg: 1.0625rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+
+  --radius-sm: var(--r-sm);
+  --radius-md: var(--r-md);
+  --radius-lg: var(--r-lg);
+  --radius-xl: var(--r-xl);
+
+  --shadow-xs: var(--shadow-xs);
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+}
+
+/* ---------------------------------------------------------- nền tảng */
+* {
+  border-color: var(--line);
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
+  font-size: var(--text-base);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* số liệu xếp cột thì phải thẳng hàng */
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+::selection {
+  background: var(--primary-soft);
+  color: var(--primary-soft-fg);
+}
+
+/* thanh cuộn mảnh, hợp với giao diện dày dữ liệu */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-strong) transparent;
+}
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-thumb {
+  background: var(--line-strong);
+  border-radius: 999px;
+  border: 3px solid var(--background);
+}
+
+/* ------------------------------------------------ hộp thoại (Radix Dialog) */
+@keyframes hien-mo {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes hien-hop {
+  from { opacity: 0; transform: translate(-50%, -48%) scale(0.97); }
+  to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+[data-radix-dialog-overlay] {
+  animation: hien-mo 140ms ease-out;
+}
+[data-radix-dialog-content] {
+  animation: hien-hop 160ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

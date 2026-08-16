@@ -1,0 +1,832 @@
+<title>Kế hoạch ATS DrKam</title>
+<style>
+  :root {
+    --ground: #F1F4F2;
+    --surface: #FFFFFF;
+    --surface-2: #E7ECE8;
+    --ink: #14201C;
+    --ink-2: #40514A;
+    --ink-muted: #63736C;
+    --line: #D2DAD5;
+    --line-strong: #B4C0BA;
+    --accent: #0E6B58;
+    --accent-ink: #0A4E40;
+    --accent-soft: #DCEAE4;
+    --warn: #96690F;
+    --warn-soft: #F5E9CE;
+    --crit: #97363F;
+    --crit-soft: #F5DCDE;
+    --shadow: 0 1px 2px rgba(20, 32, 28, .06), 0 8px 24px -16px rgba(20, 32, 28, .3);
+
+    --display: Constantia, Cambria, "Iowan Old Style", Georgia, "Times New Roman", serif;
+    --body: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+    --mono: "Cascadia Mono", Consolas, "SF Mono", "Roboto Mono", monospace;
+
+    --measure: 68ch;
+    --page: 1100px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #0F1614;
+      --surface: #161F1B;
+      --surface-2: #1D2823;
+      --ink: #E5EDE9;
+      --ink-2: #BCC9C3;
+      --ink-muted: #90A099;
+      --line: #293630;
+      --line-strong: #3A4A43;
+      --accent: #55C3A4;
+      --accent-ink: #8ED9C2;
+      --accent-soft: #16322A;
+      --warn: #D3A254;
+      --warn-soft: #33291356;
+      --crit: #D9757E;
+      --crit-soft: #3A1F2356;
+      --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px -16px rgba(0, 0, 0, .8);
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground: #0F1614;
+    --surface: #161F1B;
+    --surface-2: #1D2823;
+    --ink: #E5EDE9;
+    --ink-2: #BCC9C3;
+    --ink-muted: #90A099;
+    --line: #293630;
+    --line-strong: #3A4A43;
+    --accent: #55C3A4;
+    --accent-ink: #8ED9C2;
+    --accent-soft: #16322A;
+    --warn: #D3A254;
+    --warn-soft: #33291356;
+    --crit: #D9757E;
+    --crit-soft: #3A1F2356;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px -16px rgba(0, 0, 0, .8);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 16.5px;
+    line-height: 1.62;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    max-width: var(--page);
+    margin: 0 auto;
+    padding: clamp(28px, 5vw, 72px) clamp(18px, 4vw, 48px) 96px;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(40px, 5vw, 64px);
+  }
+
+  /* ---------- header ---------- */
+  .masthead { display: flex; flex-direction: column; gap: 18px; }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 14px;
+    align-items: center;
+  }
+  .eyebrow .dot { color: var(--line-strong); }
+  h1 {
+    font-family: var(--display);
+    font-size: clamp(34px, 5.4vw, 54px);
+    line-height: 1.08;
+    letter-spacing: -.015em;
+    font-weight: 600;
+    text-wrap: balance;
+    margin: 0;
+  }
+  .lede {
+    max-width: var(--measure);
+    font-size: clamp(17px, 1.6vw, 19px);
+    color: var(--ink-2);
+    margin: 0;
+  }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+  .chip {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: .02em;
+    padding: 5px 11px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--surface);
+    color: var(--ink-2);
+    white-space: nowrap;
+  }
+  .chip strong { color: var(--accent-ink); font-weight: 600; }
+
+  /* ---------- sections ---------- */
+  section { display: flex; flex-direction: column; gap: 20px; }
+  .sec-head { display: flex; flex-direction: column; gap: 6px; border-top: 1px solid var(--line); padding-top: 18px; }
+  .sec-num {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    letter-spacing: .14em;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+  h2 {
+    font-family: var(--display);
+    font-size: clamp(24px, 3vw, 31px);
+    line-height: 1.18;
+    letter-spacing: -.01em;
+    font-weight: 600;
+    margin: 0;
+    text-wrap: balance;
+  }
+  h3 {
+    font-size: 15px;
+    font-weight: 650;
+    letter-spacing: .01em;
+    margin: 0;
+  }
+  p { max-width: var(--measure); margin: 0; }
+  .muted { color: var(--ink-muted); }
+  a { color: var(--accent-ink); text-underline-offset: 3px; }
+  a:focus-visible, .chip:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+
+  /* ---------- cards ---------- */
+  .grid { display: grid; gap: 14px; }
+  .grid.two { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+  .grid.three { grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 18px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    box-shadow: var(--shadow);
+  }
+  .card p, .card ul { max-width: none; }
+  .card .tag {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+  .card--flat { box-shadow: none; background: var(--surface-2); }
+
+  ul { margin: 0; padding-left: 1.15em; display: flex; flex-direction: column; gap: 6px; max-width: var(--measure); }
+  li::marker { color: var(--line-strong); }
+  .tight li { gap: 4px; }
+
+  /* ---------- pipeline ---------- */
+  .pipeline { display: flex; flex-wrap: wrap; gap: 10px; }
+  .stage {
+    flex: 1 1 165px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--accent);
+    border-radius: 8px;
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+  .stage .name { font-weight: 650; font-size: 14.5px; }
+  .stage .states { display: flex; flex-wrap: wrap; gap: 5px; }
+  .pill {
+    font-size: 11.5px;
+    font-family: var(--mono);
+    padding: 3px 8px;
+    border-radius: 5px;
+    background: var(--surface-2);
+    color: var(--ink-2);
+    border: 1px solid var(--line);
+    white-space: nowrap;
+  }
+  .pill.ok { background: var(--accent-soft); color: var(--accent-ink); border-color: transparent; }
+  .pill.warn { background: var(--warn-soft); color: var(--warn); border-color: transparent; }
+  .pill.crit { background: var(--crit-soft); color: var(--crit); border-color: transparent; }
+
+  /* ---------- table ---------- */
+  .table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+  table { border-collapse: collapse; width: 100%; min-width: 720px; font-size: 14.5px; }
+  th, td { text-align: left; padding: 11px 16px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  thead th {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    font-weight: 500;
+    background: var(--surface-2);
+    white-space: nowrap;
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  td code, .code {
+    font-family: var(--mono);
+    font-size: 13px;
+    background: var(--surface-2);
+    padding: 1.5px 6px;
+    border-radius: 4px;
+    color: var(--accent-ink);
+    white-space: nowrap;
+  }
+  td .fields { color: var(--ink-2); font-size: 13.5px; }
+
+  /* ---------- screens ---------- */
+  .screen { display: grid; grid-template-columns: 34px 1fr; gap: 4px 16px; align-items: start; }
+  .screen .idx {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    width: 34px;
+    text-align: center;
+    padding: 3px 0;
+    background: var(--surface);
+  }
+  .screen .body { display: flex; flex-direction: column; gap: 8px; }
+
+  /* ---------- sprint timeline ---------- */
+  .sprints { display: flex; flex-direction: column; gap: 0; }
+  .sprint {
+    display: grid;
+    grid-template-columns: 96px 1fr;
+    gap: 4px 22px;
+    padding: 20px 0;
+    border-top: 1px dashed var(--line);
+  }
+  .sprint:first-child { border-top: none; padding-top: 4px; }
+  .sprint .when { display: flex; flex-direction: column; gap: 3px; }
+  .sprint .no {
+    font-family: var(--display);
+    font-size: 30px;
+    line-height: 1;
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .sprint .dur { font-family: var(--mono); font-size: 11.5px; color: var(--ink-muted); letter-spacing: .06em; }
+  .sprint .what { display: flex; flex-direction: column; gap: 10px; }
+  .out {
+    font-size: 13.5px;
+    color: var(--ink-2);
+    background: var(--accent-soft);
+    border-radius: 6px;
+    padding: 8px 12px;
+    align-self: flex-start;
+  }
+  .out b { color: var(--accent-ink); font-weight: 650; }
+
+  /* ---------- callout ---------- */
+  .callout {
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--warn);
+    background: var(--surface);
+    border-radius: 8px;
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .callout .tag { color: var(--warn); }
+
+  footer {
+    border-top: 1px solid var(--line);
+    padding-top: 18px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--ink-muted);
+    letter-spacing: .03em;
+  }
+
+  @media print {
+    :root {
+      --ground: #FFFFFF;
+      --surface: #FFFFFF;
+      --surface-2: #F0F3F1;
+      --ink: #14201C;
+      --ink-2: #3A4A44;
+      --ink-muted: #5A6862;
+      --line: #C8D2CC;
+      --line-strong: #A9B6AF;
+      --accent: #0B5B4B;
+      --accent-ink: #094537;
+      --accent-soft: #E4EFEA;
+      --warn: #7E5709;
+      --warn-soft: #F7EED8;
+      --crit: #852F37;
+      --crit-soft: #F8E3E5;
+      --shadow: none;
+    }
+    @page { size: A4; margin: 14mm 12mm 16mm; }
+    body { font-size: 10.5pt; line-height: 1.5; background: #fff; }
+    .page { padding: 0; gap: 26px; max-width: none; }
+    h1 { font-size: 27pt; }
+    h2 { font-size: 15pt; }
+    h3 { font-size: 11pt; }
+    .lede { font-size: 11.5pt; }
+    table { min-width: 0; font-size: 9.5pt; }
+    th, td { padding: 7px 10px; }
+    .table-wrap { overflow: visible; }
+    section { break-inside: auto; }
+    .sec-head { break-after: avoid; break-inside: avoid; }
+    .card, .sprint, .screen, .stage, .callout, tr { break-inside: avoid; }
+    a { text-decoration: none; }
+  }
+
+  @media (max-width: 560px) {
+    .sprint { grid-template-columns: 1fr; gap: 10px; }
+    .sprint .when { flex-direction: row; align-items: baseline; gap: 10px; }
+    .screen { grid-template-columns: 1fr; gap: 8px; }
+    .screen .idx { justify-self: start; }
+  }
+</style>
+
+<div class="page">
+
+  <header class="masthead">
+    <div class="eyebrow">
+      <span>Kế hoạch triển khai</span><span class="dot">/</span>
+      <span>Bộ phận HR — DrKam</span><span class="dot">/</span>
+      <span>14.08.2026</span>
+    </div>
+    <h1>Web app tuyển dụng thay thế file Google Sheet</h1>
+    <p class="lede">
+      Một ứng dụng nội bộ gói trọn ba việc HR đang làm rải rác trên sheet: quản lý CV ứng viên,
+      xếp lịch phỏng vấn hai vòng, và theo dõi checklist onboard cùng vòng đời thử việc.
+      Bám đúng quy trình trong <span class="code">DATA UV DRKAM 2026.xlsx</span> — không thêm quy trình mới,
+      chỉ bỏ phần nhập tay trùng lặp, tự động hoá những chỗ máy tính được, và cho kéo thả ở những chỗ thao tác nhiều.
+    </p>
+    <div class="chips">
+      <span class="chip">Next.js + Supabase</span>
+      <span class="chip">Deploy trên Vercel</span>
+      <span class="chip">Go-live <strong>18.08.2026</strong></span>
+      <span class="chip"><strong>5 ngày</strong> làm việc</span>
+      <span class="chip">Chuyển đổi <strong>4.697</strong> CV</span>
+      <span class="chip">Chi phí hạ tầng <strong>0đ</strong></span>
+    </div>
+  </header>
+
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">Phần 01</span>
+      <h2>Vì sao cần bỏ sheet</h2>
+    </div>
+    <p>Bốn điểm dưới đây rút ra trực tiếp từ file dữ liệu hiện tại, không phải phỏng đoán. Đây cũng là bốn thứ app phải giải quyết được, nếu không thì không đáng làm.</p>
+    <div class="grid two">
+      <div class="card">
+        <span class="tag">Nhập trùng</span>
+        <h3>Một ứng viên đang được gõ vào ba nơi</h3>
+        <p class="muted">Tên, SĐT, vị trí xuất hiện ở sheet <em>Data</em>, rồi chép lại sang <em>LỊCH PV</em>, rồi chép tiếp sang <em>LỊCH ONBOARD UV</em>. Sai một chỗ là lệch cả ba.</p>
+      </div>
+      <div class="card">
+        <span class="tag">Danh mục trôi</span>
+        <h3>51 vị trí, 27 nguồn CV — và đang lỗi</h3>
+        <p class="muted">Dropdown nguồn có cả “Face” lẫn “Facebook”, “Linkedin” lặp hai lần; danh sách vị trí bị đứt chuỗi thành <span class="code">Kế toá"&amp;"n công nợ</span>. Lọc và đếm theo nguồn hiện không tin được.</p>
+      </div>
+      <div class="card">
+        <span class="tag">Hiệu năng</span>
+        <h3>4.697 dòng là ngưỡng chịu đựng của sheet</h3>
+        <p class="muted">File còn phải dựng riêng sheet <em>CACHE_METRICS</em> để lưu số liệu tính sẵn — dấu hiệu công thức đã quá nặng để chạy trực tiếp.</p>
+      </div>
+      <div class="card">
+        <span class="tag">Không có nhắc việc</span>
+        <h3>Hạn 7 ngày / 1 tháng / 2 tháng phải tự nhớ</h3>
+        <p class="muted">Sheet onboard có cột hạn đánh giá nhưng không ai được nhắc. App tự tính từ ngày onboard và đẩy lên đầu màn hình khi đến hạn.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">Phần 02</span>
+      <h2>Phạm vi phải kịp ngày 18.08</h2>
+    </div>
+    <p>Deadline còn 5 ngày làm việc, nên phạm vi được cắt theo nguyên tắc: <strong>giữ đúng những gì HR phải làm hằng ngày trên sheet</strong>, bỏ những gì chỉ dùng theo tháng hoặc có thể làm tạm bằng cách khác.</p>
+    <div class="grid two">
+      <div class="card">
+        <span class="tag">Kịp ngày 18.08</span>
+        <ul class="tight">
+          <li>Quản lý hồ sơ ứng viên — đủ 8 nhóm thông tin như sheet <em>Data</em></li>
+          <li>Sàng lọc CV: người sàng lọc, nhận xét, kết quả, đổi trạng thái</li>
+          <li>Bảng kéo thả theo giai đoạn tuyển dụng</li>
+          <li>Lịch phỏng vấn vòng 1 và vòng 2, dạng danh sách và lịch tuần kéo thả</li>
+          <li>Checklist onboard 3 giai đoạn, 17 mục — bấm tick thay vì gõ “Yes”</li>
+          <li>Vòng đời thử việc 7 ngày / 1 tháng / 2 tháng, tự tính hạn và nhắc</li>
+          <li>Danh mục tự quản: vị trí, phòng ban, nguồn CV, người PV, HR</li>
+          <li>Xuất Excel để làm báo cáo</li>
+          <li>Đăng nhập bằng email công ty, ai đăng nhập cũng thấy và sửa được</li>
+          <li>Toàn bộ 4.697 CV cũ đã nằm trong hệ thống</li>
+        </ul>
+      </div>
+      <div class="card card--flat">
+        <span class="tag">Cắt khỏi bản 18.08</span>
+        <ul class="tight">
+          <li class="muted">Gửi email tự động — bản này chỉ đánh dấu “đã gửi kết quả”, HR vẫn gửi tay như hiện tại</li>
+          <li class="muted">Đồng bộ Google Calendar</li>
+          <li class="muted">Đọc CV PDF tự điền thông tin</li>
+          <li class="muted">Dashboard phễu tuyển dụng, time-to-hire, năng suất từng HR — bản này chỉ có vài ô đếm cơ bản</li>
+          <li class="muted">Phân quyền theo phòng ban, khu vực HN/HCM</li>
+          <li class="muted">Giao diện mobile chuyên biệt — dùng được trên điện thoại nhưng tối ưu cho máy tính</li>
+        </ul>
+        <p class="muted" style="font-size:14px">Những mục này thêm sau ngày 18.08 mà không phải sửa lại phần đã làm — kiến trúc chừa sẵn chỗ.</p>
+      </div>
+    </div>
+    <div class="callout">
+      <span class="tag">Thứ tự cắt nếu chậm tiến độ</span>
+      <p>Nếu đến chiều 17.08 có hạng mục chưa xong, thứ tự hy sinh là: xuất Excel → màn hình danh mục (sửa trực tiếp trong cơ sở dữ liệu thay thế) → lịch tuần kéo thả (vẫn còn dạng danh sách). Ba phần lõi — hồ sơ ứng viên, lịch PV, onboard — không nằm trong diện cắt.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">Phần 03</span>
+      <h2>Những gì app tự làm thay HR</h2>
+    </div>
+    <p>Mỗi dòng dưới đây là một thao tác đang phải gõ tay trong sheet. Tất cả đều nằm trong bản 18.08 vì chúng gần như không tốn thêm thời gian làm — logic đã có sẵn khi dựng cơ sở dữ liệu.</p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:44%">HR thao tác</th>
+            <th>App tự xử lý</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Chọn ngày nhận CV</td>
+            <td class="fields">Tự điền Năm và Tháng — hai cột đang gõ tay trong sheet, và tự sinh số thứ tự</td>
+          </tr>
+          <tr>
+            <td>Chọn vị trí ứng tuyển</td>
+            <td class="fields">Tự điền Phòng ban và Cấp bậc theo bản đồ ánh xạ dựng từ dữ liệu cũ, vẫn sửa lại được nếu là trường hợp đặc biệt</td>
+          </tr>
+          <tr>
+            <td>Gõ số điện thoại hoặc email</td>
+            <td class="fields">Kiểm tra trùng ngay khi gõ, hiện hồ sơ cũ kèm lịch sử ứng tuyển; chuẩn hoá số điện thoại về một dạng, giữ số 0 đầu</td>
+          </tr>
+          <tr>
+            <td>Nhập kết quả PV vòng 1 là “Đạt”</td>
+            <td class="fields">Đổi trạng thái CV sang “PV đạt - vòng 1” và mở sẵn ô đặt lịch vòng 2; “Không đạt” thì chuyển “Phỏng vấn - loại”</td>
+          </tr>
+          <tr>
+            <td>Nhập kết quả PV vòng 2 là “Đạt”</td>
+            <td class="fields">Đổi trạng thái sang “Chờ nhận việc” và tạo sẵn một dòng onboard trống cho ứng viên đó</td>
+          </tr>
+          <tr>
+            <td>Điền ngày onboard</td>
+            <td class="fields">Tự tính ba hạn đánh giá 7 ngày, 1 tháng, 2 tháng và đẩy lên đầu danh sách khi đến hạn</td>
+          </tr>
+          <tr>
+            <td>Tick các mục checklist onboard</td>
+            <td class="fields">Tự tính phần trăm hoàn thành từng giai đoạn, đánh dấu hồ sơ còn thiếu giấy tờ</td>
+          </tr>
+          <tr>
+            <td>Đặt lịch phỏng vấn</td>
+            <td class="fields">Cảnh báo nếu người PV đã có ca khác trùng giờ; lịch tự hiện ở màn hình Lịch PV, không phải chép sang sheet khác</td>
+          </tr>
+          <tr>
+            <td>Để hồ sơ quá 7 ngày chưa xử lý</td>
+            <td class="fields">Tự gắn nhãn cảnh báo và đếm lên ô “Quá 7 ngày chưa phản hồi” ở đầu màn hình</td>
+          </tr>
+          <tr>
+            <td>Tìm “nguyen van a”</td>
+            <td class="fields">Tìm ra “Nguyễn Văn A” — không cần gõ dấu, tìm được cả theo số điện thoại và email</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">Phần 04</span>
+      <h2>Chỗ nào kéo thả được</h2>
+    </div>
+    <p>Kéo thả chỉ dùng ở nơi nó thật sự nhanh hơn gõ. Mọi thao tác kéo thả đều có cách làm thay bằng chuột thường, phòng khi dùng trên máy cấu hình yếu.</p>
+    <div class="grid two">
+      <div class="card">
+        <span class="tag">Bảng giai đoạn</span>
+        <h3>Kéo thẻ ứng viên đổi trạng thái</h3>
+        <p class="muted">Năm cột theo giai đoạn tuyển dụng: Mới về, Phỏng vấn, Chờ quyết định, Nhận việc, Dừng. Kéo thẻ sang cột khác là trạng thái CV đổi theo. Kéo vào cột Phỏng vấn thì hiện luôn ô chọn ngày giờ.</p>
+      </div>
+      <div class="card">
+        <span class="tag">Lịch tuần</span>
+        <h3>Kéo ca phỏng vấn sang giờ khác</h3>
+        <p class="muted">Ứng viên đổi lịch thì kéo ô sang ngày hoặc khung giờ mới, không phải mở form sửa. Thả vào chỗ trùng lịch người PV thì ô chuyển màu cảnh báo.</p>
+      </div>
+      <div class="card">
+        <span class="tag">Hồ sơ</span>
+        <h3>Thả file CV vào hồ sơ ứng viên</h3>
+        <p class="muted">Kéo file PDF hoặc ảnh CV thả thẳng vào panel hồ sơ để lưu kèm, thay cho việc dán link như hiện tại.</p>
+      </div>
+      <div class="card">
+        <span class="tag">Nhập liệu hàng loạt</span>
+        <h3>Thả file Excel để nạp nhiều ứng viên</h3>
+        <p class="muted">Kéo file .xlsx hoặc .csv vào trang nhập liệu, app hiện bảng đối chiếu cột trước khi lưu. Dán trực tiếp nhiều dòng copy từ Excel cũng được.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">Phần 05</span>
+      <h2>Công nghệ và hạ tầng</h2>
+    </div>
+    <div class="grid three">
+      <div class="card">
+        <span class="tag">Giao diện</span>
+        <h3>Next.js 15 + TypeScript</h3>
+        <p class="muted">Tailwind CSS và shadcn/ui cho các thành phần chuẩn; TanStack Table cho bảng ứng viên nhiều nghìn dòng; dnd-kit cho toàn bộ thao tác kéo thả, chạy mượt cả trên máy cấu hình thấp.</p>
+      </div>
+      <div class="card">
+        <span class="tag">Dữ liệu</span>
+        <h3>Supabase — Postgres</h3>
+        <p class="muted">Kèm sẵn đăng nhập và Storage để lưu file CV. Tìm kiếm tiếng Việt không dấu bằng <span class="code">unaccent</span> + <span class="code">pg_trgm</span>: gõ “nguyen van a” vẫn ra “Nguyễn Văn A”.</p>
+      </div>
+      <div class="card">
+        <span class="tag">Vận hành</span>
+        <h3>Vercel, một link dùng ngay</h3>
+        <p class="muted">Không cần IT dựng máy chủ. Gói miễn phí đủ cho vài HR và ~5.000 hồ sơ; sao lưu Postgres hằng ngày, cần thì tải về bản Excel bất cứ lúc nào.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">Phần 06</span>
+      <h2>Mô hình dữ liệu</h2>
+    </div>
+    <p>Thay đổi quan trọng nhất so với sheet: <strong>Lịch PV và Lịch Onboard không còn là bảng nhập tay</strong>. Chúng là cách hiển thị khác của cùng một hồ sơ ứng viên. Đặt lịch trong hồ sơ thì lịch tự hiện; nhập kết quả PV thì trạng thái CV tự đổi.</p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Bảng</th>
+            <th>Thay cho</th>
+            <th>Trường chính</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>candidates</code></td>
+            <td>Sheet <em>Data</em>, cột A–U, AI–AK</td>
+            <td class="fields">Ngày nhận CV, họ tên, giới tính, khu vực, SĐT, email, link CV, vị trí, phòng ban, cấp bậc, nguồn, người sàng lọc, nhận xét sàng lọc, trạng thái, quê quán, kinh nghiệm, thời gian onboard, lương mong muốn, trạng thái offer, ngày onboard dự kiến / thực tế</td>
+          </tr>
+          <tr>
+            <td><code>interviews</code></td>
+            <td>Sheet <em>Data</em> cột V–AH + toàn bộ sheet <em>LỊCH PV</em></td>
+            <td class="fields">Ứng viên, vòng (1 hoặc 2), ngày, giờ, hình thức (Online / Offline HN / Offline HCM), người PV (chọn nhiều), kết quả (Đạt / Không đạt / Back up), ghi chú, đã trả kết quả qua mail</td>
+          </tr>
+          <tr>
+            <td><code>onboardings</code></td>
+            <td>Sheet <em>LỊCH ONBOARD UV</em></td>
+            <td class="fields">Ứng viên, ngày onboard, văn phòng tiếp nhận, 17 mục checklist (pre-onboard, ngày onboard, đào tạo hội nhập), nhân sự phụ trách từng giai đoạn, trạng thái vòng đời, hạn và kết quả đánh giá 7 ngày / 1 tháng / 2 tháng</td>
+          </tr>
+          <tr>
+            <td><code>catalogs</code></td>
+            <td>Sheet <em>DATA GỐC</em> + các dropdown rời</td>
+            <td class="fields">Loại danh mục, giá trị, thứ tự, còn dùng hay đã ẩn — HR tự thêm vị trí hoặc nguồn CV mới, không cần lập trình viên</td>
+          </tr>
+          <tr>
+            <td><code>activity_log</code></td>
+            <td>Không có trong sheet</td>
+            <td class="fields">Ai sửa hồ sơ nào, đổi gì, lúc nào. Vì mọi người dùng chung quyền nên cần vết truy lại khi số liệu lệch</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="muted">Sheet <em>CACHE_METRICS</em> không cần chuyển: Postgres đếm 4.697 dòng trong mili-giây, không phải tính sẵn rồi lưu lại.</p>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">Phần 07</span>
+      <h2>Vòng đời ứng viên</h2>
+    </div>
+    <p>13 trạng thái CV hiện có được giữ nguyên tên gọi HR đang quen, nhóm lại thành 5 giai đoạn để lọc và đếm cho gọn. App chỉ cho chuyển sang trạng thái hợp lệ kế tiếp, nên không còn cảnh một ứng viên vừa “Loại” vừa có lịch PV.</p>
+    <div class="pipeline">
+      <div class="stage">
+        <span class="name">Mới về</span>
+        <div class="states">
+          <span class="pill">Đang liên hệ</span>
+          <span class="pill">Chưa liên hệ được</span>
+        </div>
+      </div>
+      <div class="stage">
+        <span class="name">Phỏng vấn</span>
+        <div class="states">
+          <span class="pill">Phỏng vấn vòng 1</span>
+          <span class="pill">Phỏng vấn vòng 2</span>
+          <span class="pill ok">PV đạt - vòng 1</span>
+        </div>
+      </div>
+      <div class="stage">
+        <span class="name">Chờ quyết định</span>
+        <div class="states">
+          <span class="pill warn">Backup</span>
+          <span class="pill warn">PV đạt - backup</span>
+        </div>
+      </div>
+      <div class="stage">
+        <span class="name">Nhận việc</span>
+        <div class="states">
+          <span class="pill ok">Chờ nhận việc</span>
+          <span class="pill ok">Nhận việc</span>
+        </div>
+      </div>
+      <div class="stage">
+        <span class="name">Dừng</span>
+        <div class="states">
+          <span class="pill crit">Loại</span>
+          <span class="pill crit">Phỏng vấn - loại</span>
+          <span class="pill crit">Không đến PV</span>
+          <span class="pill crit">Từ chối nhận việc</span>
+        </div>
+      </div>
+    </div>
+    <p class="muted">Sau khi “Nhận việc”, hồ sơ chuyển tiếp sang vòng đời onboard: Pass 7 ngày → Pass 1 tháng → Pass 2 tháng, hoặc rẽ nhánh Không đạt sau thử việc / Nghỉ việc.</p>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">Phần 08</span>
+      <h2>Các màn hình</h2>
+    </div>
+    <p>Bố cục theo hướng ảnh TopCV bạn gửi — sidebar trái cố định, thanh lọc ngang trên cùng, danh sách ứng viên dạng thẻ có ảnh đại diện chữ cái và badge trạng thái màu. Khác biệt chính: bỏ quảng cáo, thêm cột thao tác nhanh, và số liệu cảnh báo bấm vào được để lọc thẳng.</p>
+
+    <div class="grid" style="gap:22px">
+      <div class="screen">
+        <span class="idx">01</span>
+        <div class="body">
+          <h3>Danh sách ứng viên — màn hình chính</h3>
+          <p class="muted">Lọc theo tên / email / SĐT, vị trí, phòng ban, trạng thái, nguồn CV, người sàng lọc, khu vực và khoảng thời gian. Ba ô đếm ở đầu trang thay cho banner của TopCV: <em>Chưa sàng lọc</em>, <em>Chưa đặt lịch PV</em>, <em>Quá 7 ngày chưa phản hồi</em> — bấm vào là lọc ngay danh sách bên dưới.</p>
+        </div>
+      </div>
+
+      <div class="screen">
+        <span class="idx">02</span>
+        <div class="body">
+          <h3>Hồ sơ ứng viên</h3>
+          <p class="muted">Mở dạng panel trượt từ phải, không rời khỏi danh sách. Bố cục đúng 8 nhóm của sheet. Cạnh đó là dòng thời gian: ai sửa gì, kết quả từng vòng PV, ghi chú. Nút chuyển trạng thái nằm cố định ở đầu panel.</p>
+        </div>
+      </div>
+
+      <div class="screen">
+        <span class="idx">03</span>
+        <div class="body">
+          <h3>Thêm ứng viên</h3>
+          <p class="muted">Form một màn, mọi dropdown lấy từ danh mục. Chặn trùng theo SĐT và email — gõ số đã có là hiện ngay hồ sơ cũ kèm lịch sử ứng tuyển, tránh tình trạng một người nằm ba dòng trong 4.697 CV.</p>
+        </div>
+      </div>
+
+      <div class="screen">
+        <span class="idx">04</span>
+        <div class="body">
+          <h3>Bảng giai đoạn</h3>
+          <p class="muted">Cùng dữ liệu với màn hình danh sách nhưng bày theo 5 cột giai đoạn, mỗi ứng viên là một thẻ hiện tên, vị trí, nguồn và số ngày chờ. Kéo thẻ để đổi trạng thái. Hữu ích cho buổi họp điểm tin đầu tuần: nhìn một cái là biết đang tắc ở khâu nào.</p>
+        </div>
+      </div>
+
+      <div class="screen">
+        <span class="idx">05</span>
+        <div class="body">
+          <h3>Lịch phỏng vấn</h3>
+          <p class="muted">Hai chế độ xem: danh sách theo vòng 1 / vòng 2 giống sheet cũ, và lưới theo tuần chia theo khung giờ — kéo ô để đổi lịch. Cảnh báo khi một người PV bị xếp hai ca trùng giờ. Nhập kết quả ngay trên dòng lịch, trạng thái CV tự cập nhật theo.</p>
+        </div>
+      </div>
+
+      <div class="screen">
+        <span class="idx">06</span>
+        <div class="body">
+          <h3>Onboard</h3>
+          <p class="muted">Mỗi nhân sự mới là một dòng, 17 mục checklist gom theo ba giai đoạn, có thanh tiến độ. Hạn đánh giá 7 ngày / 1 tháng / 2 tháng tự tính từ ngày onboard; đến hạn thì nổi lên đầu danh sách kèm dấu cảnh báo.</p>
+        </div>
+      </div>
+
+      <div class="screen">
+        <span class="idx">07</span>
+        <div class="body">
+          <h3>Danh mục và cấu hình</h3>
+          <p class="muted">Nơi HR tự thêm, sửa, ẩn: vị trí, phòng ban, cấp bậc, nguồn CV, người phỏng vấn, người sàng lọc, hình thức PV. Ẩn một giá trị không làm mất dữ liệu cũ đang dùng nó.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">Phần 09</span>
+      <h2>Lịch 5 ngày, từ 14 đến 18 tháng 8</h2>
+    </div>
+    <p>Mỗi ngày kết thúc bằng một thứ bạn mở link lên bấm thử được, không phải bản báo cáo tiến độ. Từ hết ngày 15.08 bạn đã nhập ứng viên mới trên app được, chạy song song với sheet để đối chiếu cho yên tâm.</p>
+    <div class="sprints">
+      <div class="sprint">
+        <div class="when"><span class="no">1</span><span class="dur">THỨ 5 · 14.08</span></div>
+        <div class="what">
+          <h3>Dựng nền và nạp dữ liệu</h3>
+          <p class="muted">Khởi tạo dự án, tạo cơ sở dữ liệu, nạp toàn bộ danh mục từ sheet <em>DATA GỐC</em> và các dropdown, viết script import Excel, bật đăng nhập bằng email, đưa lên Vercel.</p>
+          <span class="out"><b>Cuối ngày:</b> có link đăng nhập được, danh mục đã đầy đủ</span>
+        </div>
+      </div>
+      <div class="sprint">
+        <div class="when"><span class="no">2</span><span class="dur">THỨ 6 · 15.08</span></div>
+        <div class="what">
+          <h3>Quản lý CV — phần lõi</h3>
+          <p class="muted">Danh sách, bộ lọc, tìm kiếm không dấu, hồ sơ chi tiết 8 nhóm, thêm và sửa ứng viên, chặn trùng, sàng lọc, chuyển trạng thái, và toàn bộ nhóm tự động ở Phần 03.</p>
+          <span class="out"><b>Cuối ngày:</b> nhập ứng viên mới trên app được — thay sheet <em>Data</em></span>
+        </div>
+      </div>
+      <div class="sprint">
+        <div class="when"><span class="no">3</span><span class="dur">THỨ 7 · 16.08</span></div>
+        <div class="what">
+          <h3>Lịch phỏng vấn và bảng giai đoạn</h3>
+          <p class="muted">Đặt lịch vòng 1 và vòng 2, lịch tuần kéo thả, cảnh báo trùng lịch người PV, nhập kết quả tự đổi trạng thái. Bảng giai đoạn kéo thẻ. Import thử 4.697 CV lên môi trường nháp để kiểm tra dữ liệu bẩn.</p>
+          <span class="out"><b>Cuối ngày:</b> thay sheet <em>LỊCH PV</em>, hết cảnh chép tay hai lần</span>
+        </div>
+      </div>
+      <div class="sprint">
+        <div class="when"><span class="no">4</span><span class="dur">CHỦ NHẬT · 17.08</span></div>
+        <div class="what">
+          <h3>Onboard, thử việc, xuất Excel</h3>
+          <p class="muted">Checklist ba giai đoạn, phân công phụ trách, vòng đời thử việc với hạn tự tính và nhắc đến hạn, thả file Excel để nhập hàng loạt, xuất báo cáo, vài ô số liệu cơ bản.</p>
+          <span class="out"><b>Cuối ngày:</b> thay sheet <em>LỊCH ONBOARD UV</em>, đủ tính năng bản 1</span>
+        </div>
+      </div>
+      <div class="sprint">
+        <div class="when"><span class="no">5</span><span class="dur">THỨ 2 · 18.08</span></div>
+        <div class="what">
+          <h3>Chuyển dữ liệu thật và bàn giao</h3>
+          <p class="muted">Sáng: import chính thức 4.697 CV, chuẩn hoá danh mục, đối chiếu số liệu với sheet. Chiều: HR dùng thử tại chỗ, tôi sửa lỗi phát sinh ngay, hướng dẫn sử dụng ngắn.</p>
+          <span class="out"><b>Cuối ngày:</b> go-live, sheet chuyển sang chỉ đọc để lưu trữ</span>
+        </div>
+      </div>
+    </div>
+    <div class="callout">
+      <span class="tag">Điều kiện để giữ được lịch này</span>
+      <p>Lịch trên có 2 ngày cuối tuần và không có ngày đệm cho việc sửa đổi lớn. Để không trượt: bản export đầy đủ của Google Sheet cần có <strong>trước hết ngày 16.08</strong>, và mỗi cuối ngày bạn xem qua phần vừa xong khoảng 15 phút để phản hồi sớm — góp ý ở ngày 2 sửa mất vài phút, cũng góp ý đó ở ngày 5 có thể mất cả buổi.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">Phần 10</span>
+      <h2>Chuyển 4.697 CV sang app</h2>
+    </div>
+    <p>File Excel bạn gửi là bản export đã mất dữ liệu — sheet <em>Data</em> chỉ còn 2 dòng, <em>LỊCH PV</em> còn 3, <em>LỊCH ONBOARD UV</em> còn 4, trong khi <em>CACHE_METRICS</em> ghi nhận 4.697 CV. Cấu trúc thì đủ để thiết kế, nhưng để chuyển dữ liệu thật thì cần bản export đầy đủ từ Google Sheet gốc.</p>
+    <div class="grid two">
+      <div class="card">
+        <span class="tag">Việc script làm tự động</span>
+        <ul class="tight">
+          <li>Chuẩn hoá số điện thoại, giữ số 0 đầu, bỏ khoảng trắng và dấu chấm</li>
+          <li>Gộp giá trị trùng nghĩa: “Face” → “Facebook”, “Linkedin” lặp, “VN Work” và “Vietnamwork”</li>
+          <li>Sửa các giá trị lỗi chuỗi trong danh sách vị trí</li>
+          <li>Chuyển ngày tháng về chuẩn ngày, giờ PV về chuẩn giờ</li>
+          <li>Đánh dấu nghi ngờ trùng theo SĐT và email để HR xem lại thủ công</li>
+        </ul>
+      </div>
+      <div class="callout">
+        <span class="tag">Cần bạn gửi trước 16.08</span>
+        <p>Bản export đầy đủ của Google Sheet gốc, định dạng .xlsx, giữ nguyên tên sheet và thứ tự cột. Import chính thức chạy sáng 18.08, nhưng ngày 16.08 tôi phải chạy thử một lần trên môi trường nháp để phát hiện cột bẩn. Nếu file về muộn hơn, việc chuyển dữ liệu sẽ lùi sang sau ngày 18.08 — app vẫn go-live đúng hạn nhưng ban đầu chỉ có ứng viên nhập mới.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">Phần 11</span>
+      <h2>Điểm cần lưu ý trước khi bắt đầu</h2>
+    </div>
+    <div class="grid three">
+      <div class="card card--flat">
+        <h3>Rủi ro lớn nhất là thời gian</h3>
+        <p class="muted">5 ngày đủ để làm xong danh sách tính năng ở Phần 02, nhưng không có ngày đệm. Nếu giữa chừng phát sinh yêu cầu mới ngoài quy trình trong sheet, nó sẽ đẩy một hạng mục khác sang sau 18.08 — tôi sẽ báo ngay khi thấy, không để đến phút chót.</p>
+      </div>
+      <div class="card card--flat">
+        <h3>Không phân quyền</h3>
+        <p class="muted">Theo lựa chọn của bạn, ai đăng nhập cũng xem và sửa được toàn bộ hồ sơ, gồm SĐT và email ứng viên. Bù lại app ghi nhật ký thay đổi. Khi nào cần siết, thêm phân quyền không phải làm lại từ đầu.</p>
+      </div>
+      <div class="card card--flat">
+        <h3>Dữ liệu ứng viên nằm trên cloud</h3>
+        <p class="muted">Supabase đặt tại Singapore. Nếu công ty có quy định dữ liệu nhân sự phải lưu trong nước hoặc trên máy chủ nội bộ, cần chốt lại trước chặng 0 vì việc này ảnh hưởng tới hạ tầng.</p>
+      </div>
+      <div class="card card--flat">
+        <h3>Dùng chung project với app cũ</h3>
+        <p class="muted">Gói Supabase miễn phí chỉ cho 2 project và công ty đã dùng hết, nên app tuyển dụng nằm chung một project nhưng ở schema riêng <span class="code">tuyendung</span> — tách hẳn khỏi dữ liệu app cũ. Đổi lại là chung hạn mức 500MB; 4.697 hồ sơ dạng chữ chiếm khoảng 50–100MB. Khi cần lưu kèm file CV PDF thì nên tách project riêng hoặc nâng gói Pro 25 USD/tháng.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    Kế hoạch dựa trên phân tích DATA UV DRKAM 2026.xlsx — 5 sheet, 40 cột dữ liệu ứng viên, 13 trạng thái CV, 17 mục checklist onboard. Cập nhật 14.08.2026 theo deadline 18.08.
+  </footer>
+
+</div>

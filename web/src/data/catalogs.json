@@ -1,0 +1,1905 @@
+[
+  {
+    "type": "position",
+    "value": "Ads",
+    "sort_order": 0,
+    "meta": {
+      "department": "Marketing",
+      "level": "Nhân viên"
+    },
+    "active": true
+  },
+  {
+    "type": "position",
+    "value": "Ads chạy kênh AI",
+    "sort_order": 1,
+    "meta": {
+      "department": "Marketing",
+      "level": "Nhân viên"
+    },
+    "active": true
+  },
+  {
+    "type": "position",
+    "value": "Biên kịch Tiktok",
+    "sort_order": 2,
+    "meta": {
+      "department": "Marketing",
+      "level": "Nhân viên"
+    },
+    "active": true
+  },
+  {
+    "type": "position",
+    "value": "Booking",
+    "sort_order": 3,
+    "meta": {
+      "department": "Marketing",
+      "level": "Nhân viên"
+    },
+    "active": true
+  },
+  {
+    "type": "position",
+    "value": "Content",
+    "sort_order": 4,
+    "meta": {
+      "department": "Marketing",
+      "level": "Nhân viên"
+    },
+    "active": true
+  },
+  {
+    "type": "position",
+    "value": "CSKH off",
+    "sort_order": 5,
+    "meta": {
+      "department": "Sale offline",
+      "level": "Nhân viên"
+    },
+    "active": true
+  },
+  {
+    "type": "position",
+    "value": "CSKH on",
+    "sort_order": 6,
+    "meta": {
+      "department": "Sale online",
+      "level": "Nhân viên"
+    },
+    "active": true
+  },
+  {
+    "type": "position",
+    "value": "Designer",
+    "sort_order": 7,
+    "meta": {
+      "department": "Marketing",
+      "level": "Nhân viên"
+    },
+    "active": true
+  },
+  {
+    "type": "position",
+    "value": "Digital Lead",
+    "sort_order": 8,
+    "meta": {
+      "department": "Marketing",
+      "level": "Trưởng phòng"
+    },
+    "active": true
+  },
+  {
+    "type": "position",
+    "value": "Đóng hàng (Fulltime)",
+    "sort_order": 9,
+    "meta": {
+      "department": "Kho vận",
+      "level": "Nhân viên"
+    },
+    "active": true
+  },
+  {
+    "type": "position",
+    "value": "Đóng hàng (Partime)",
+    "sort_order": 10,
+    "meta": {
+      "department": "Kho vận",
+      "level": "Partime"
+    },
+    "active": true
+  },
+  {
+    "type": "position",
+    "value": "HR",
+    "sort_order": 11,
+    "meta": {
+      "department": "HCNS",
+      "level": "Nhân viên"
+    },
+    "active": true
+  },
+  {
+    "type": "position",
+    "value": "HRM",
+    "sort_order": 12,
+    "meta": {
+      "department": "HCNS",
+      "level": "Trưởng phòng"
+    },
+    "active": true
+  },
+  {
+    "type": "position",
+    "value": "Kế toán sàn",
+    "sort_order": 13,
+    "meta": {
+      "department": "Kế toán",
+      "level": "Nhân viên"
+    },
+    "active": true
+  },
+  {
+    "type": "position",
+    "value": "Live full",
+    "sort_order": 14,
+    "meta": {
+      "department": "Marketing",
+      "level": "Nhân viên"
+    },
+    "active": true
+  },
+  {
+    "type": "position",
+    "value": "Live Part",
+    "sort_order": 15,
+    "meta": {
+      "department": "Marketing",
+      "level": "Nhân viên"
+    },
+    "active": true
+  },
+  {
+    "type": "position",
+    "value": "Marketing AI",
+    "sort_order": 16,
+    "meta": {
+      "department": "Marketing",
+      "level": "Nhân viên"
+    },
+    "active": true
+  },
+  {
+    "type": "position",
+    "value": "Media",
+    "sort_order": 17,
+    "meta": {
+      "department": "Marketing",
+      "level": "Nhân viên"
+    },
+    "active": true
+  },
+  {
+    "type": "position",
+    "value": "Sale off",
+    "sort_order": 18,
+    "meta": {
+      "department": "Sale offline",
+      "level": "Nhân viên"
+    },
+    "active": true
+  },
+  {
+    "type": "position",
+    "value": "Sale On",
+    "sort_order": 19,
+    "meta": {
+      "department": "Sale online",
+      "level": "Nhân viên"
+    },
+    "active": true
+  },
+  {
+    "type": "position",
+    "value": "Trưởng phòng Marketing",
+    "sort_order": 20,
+    "meta": {
+      "department": "Marketing",
+      "level": "Trưởng phòng"
+    },
+    "active": true
+  },
+  {
+    "type": "position",
+    "value": "Trợ lý TGD",
+    "sort_order": 21,
+    "meta": {
+      "department": "BGĐ",
+      "level": "Nhân viên"
+    },
+    "active": true
+  },
+  {
+    "type": "position",
+    "value": "TTS HR",
+    "sort_order": 22,
+    "meta": {
+      "department": "HCNS",
+      "level": "Thực tập sinh"
+    },
+    "active": true
+  },
+  {
+    "type": "position",
+    "value": "TTS MKT",
+    "sort_order": 23,
+    "meta": {
+      "department": "Marketing",
+      "level": "Thực tập sinh"
+    },
+    "active": true
+  },
+  {
+    "type": "position",
+    "value": "Vận hành Sàn",
+    "sort_order": 24,
+    "meta": {
+      "department": "Sale online",
+      "level": "Nhân viên"
+    },
+    "active": true
+  },
+  {
+    "type": "position",
+    "value": "Kế toán kho",
+    "sort_order": 25,
+    "meta": {
+      "department": "Kế toán",
+      "level": "Nhân viên"
+    },
+    "active": true
+  },
+  {
+    "type": "position",
+    "value": "Lead Live",
+    "sort_order": 26,
+    "meta": {
+      "department": "Marketing",
+      "level": "Trưởng nhóm"
+    },
+    "active": true
+  },
+  {
+    "type": "position",
+    "value": "Vận Đơn",
+    "sort_order": 27,
+    "meta": {
+      "department": "Kho vận",
+      "level": "Nhân viên"
+    },
+    "active": true
+  },
+  {
+    "type": "position",
+    "value": "Kế toán viên",
+    "sort_order": 28,
+    "meta": {
+      "department": "Kế toán",
+      "level": "Nhân viên"
+    },
+    "active": true
+  },
+  {
+    "type": "position",
+    "value": "Kế toán kiêm Hành chính",
+    "sort_order": 29,
+    "meta": {
+      "department": "Kế toán",
+      "level": "Nhân viên"
+    },
+    "active": true
+  },
+  {
+    "type": "position",
+    "value": "Lead Content",
+    "sort_order": 30,
+    "meta": {
+      "department": "Marketing",
+      "level": "Trưởng nhóm"
+    },
+    "active": true
+  },
+  {
+    "type": "position",
+    "value": "Brand leader",
+    "sort_order": 31,
+    "meta": {
+      "department": "Marketing",
+      "level": "Trưởng phòng"
+    },
+    "active": true
+  },
+  {
+    "type": "position",
+    "value": "TTS Media",
+    "sort_order": 32,
+    "meta": {
+      "department": "Marketing",
+      "level": "Thực tập sinh"
+    },
+    "active": true
+  },
+  {
+    "type": "position",
+    "value": "TTS Booking",
+    "sort_order": 33,
+    "meta": {
+      "department": "Marketing",
+      "level": "Thực tập sinh"
+    },
+    "active": true
+  },
+  {
+    "type": "position",
+    "value": "TTS Content",
+    "sort_order": 34,
+    "meta": {
+      "department": "Marketing",
+      "level": "Thực tập sinh"
+    },
+    "active": true
+  },
+  {
+    "type": "position",
+    "value": "Trợ live",
+    "sort_order": 35,
+    "meta": {
+      "department": "Marketing",
+      "level": "Nhân viên"
+    },
+    "active": true
+  },
+  {
+    "type": "position",
+    "value": "TTS kế toán",
+    "sort_order": 36,
+    "meta": {
+      "department": "Kế toán",
+      "level": "Thực tập sinh"
+    },
+    "active": true
+  },
+  {
+    "type": "position",
+    "value": "Telesale",
+    "sort_order": 37,
+    "meta": {
+      "department": "Sale online",
+      "level": "Nhân viên"
+    },
+    "active": true
+  },
+  {
+    "type": "position",
+    "value": "Kế toán trưởng",
+    "sort_order": 38,
+    "meta": {
+      "department": "Kế toán",
+      "level": "Trưởng phòng"
+    },
+    "active": true
+  },
+  {
+    "type": "position",
+    "value": "Quản lý kho",
+    "sort_order": 39,
+    "meta": {
+      "department": "Kho vận",
+      "level": "Trưởng phòng"
+    },
+    "active": true
+  },
+  {
+    "type": "position",
+    "value": "NV kho vận",
+    "sort_order": 40,
+    "meta": {
+      "department": "Kho vận",
+      "level": "Nhân viên"
+    },
+    "active": true
+  },
+  {
+    "type": "position",
+    "value": "Leader CSKH On",
+    "sort_order": 41,
+    "meta": {
+      "department": "Sale online",
+      "level": "Trưởng nhóm"
+    },
+    "active": true
+  },
+  {
+    "type": "position",
+    "value": "Kế toán tổng hợp",
+    "sort_order": 42,
+    "meta": {
+      "department": "Kế toán",
+      "level": "Nhân viên"
+    },
+    "active": true
+  },
+  {
+    "type": "position",
+    "value": "Digital Marketing",
+    "sort_order": 43,
+    "meta": {
+      "department": "Marketing",
+      "level": "Nhân viên"
+    },
+    "active": true
+  },
+  {
+    "type": "position",
+    "value": "Kế toán nội bộ",
+    "sort_order": 44,
+    "meta": {
+      "department": "Kế toán",
+      "level": "Nhân viên"
+    },
+    "active": true
+  },
+  {
+    "type": "position",
+    "value": "SEO WEB",
+    "sort_order": 45,
+    "meta": {
+      "department": "Marketing",
+      "level": "Nhân viên"
+    },
+    "active": true
+  },
+  {
+    "type": "position",
+    "value": "Kế toán công nợ",
+    "sort_order": 46,
+    "meta": {
+      "department": "Kế toán",
+      "level": "Nhân viên"
+    },
+    "active": true
+  },
+  {
+    "type": "position",
+    "value": "HCNS",
+    "sort_order": 47,
+    "meta": {
+      "department": "HCNS",
+      "level": "Nhân viên"
+    },
+    "active": true
+  },
+  {
+    "type": "position",
+    "value": "Kế toán Thuế",
+    "sort_order": 48,
+    "meta": {
+      "department": "Kế toán",
+      "level": "Nhân viên"
+    },
+    "active": true
+  },
+  {
+    "type": "department",
+    "value": "BGĐ",
+    "sort_order": 0,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "department",
+    "value": "HCNS",
+    "sort_order": 1,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "department",
+    "value": "Kế toán",
+    "sort_order": 2,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "department",
+    "value": "Kho vận",
+    "sort_order": 3,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "department",
+    "value": "Marketing",
+    "sort_order": 4,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "department",
+    "value": "Sale online",
+    "sort_order": 5,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "department",
+    "value": "Sale offline",
+    "sort_order": 6,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "level",
+    "value": "Giám đốc",
+    "sort_order": 0,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "level",
+    "value": "Nhân viên",
+    "sort_order": 1,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "level",
+    "value": "Thực tập sinh",
+    "sort_order": 2,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "level",
+    "value": "Trưởng phòng",
+    "sort_order": 3,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "level",
+    "value": "Trưởng nhóm",
+    "sort_order": 4,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "level",
+    "value": "Partime",
+    "sort_order": 5,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "region",
+    "value": "Hà Nội",
+    "sort_order": 0,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "region",
+    "value": "TP.HCM",
+    "sort_order": 1,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "gender",
+    "value": "Nam",
+    "sort_order": 0,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "gender",
+    "value": "Nữ",
+    "sort_order": 1,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "province",
+    "value": "An Giang",
+    "sort_order": 0,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "province",
+    "value": "Bà Rịa - Vũng Tàu",
+    "sort_order": 1,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "province",
+    "value": "Bắc Giang",
+    "sort_order": 2,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "province",
+    "value": "Bắc Kạn",
+    "sort_order": 3,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "province",
+    "value": "Bạc Liêu",
+    "sort_order": 4,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "province",
+    "value": "Bắc Ninh",
+    "sort_order": 5,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "province",
+    "value": "Bến Tre",
+    "sort_order": 6,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "province",
+    "value": "Bình Định",
+    "sort_order": 7,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "province",
+    "value": "Bình Dương",
+    "sort_order": 8,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "province",
+    "value": "Bình Phước",
+    "sort_order": 9,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "province",
+    "value": "Bình Thuận",
+    "sort_order": 10,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "province",
+    "value": "Cà Mau",
+    "sort_order": 11,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "province",
+    "value": "Cần Thơ",
+    "sort_order": 12,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "province",
+    "value": "Cao Bằng",
+    "sort_order": 13,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "province",
+    "value": "Đà Nẵng",
+    "sort_order": 14,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "province",
+    "value": "Đắk Lắk",
+    "sort_order": 15,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "province",
+    "value": "Đắk Nông",
+    "sort_order": 16,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "province",
+    "value": "Điện Biên",
+    "sort_order": 17,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "province",
+    "value": "Đồng Nai",
+    "sort_order": 18,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "province",
+    "value": "Đồng Tháp",
+    "sort_order": 19,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "province",
+    "value": "Gia Lai",
+    "sort_order": 20,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "province",
+    "value": "Hà Giang",
+    "sort_order": 21,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "province",
+    "value": "Hà Nam",
+    "sort_order": 22,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "province",
+    "value": "Hà Nội",
+    "sort_order": 23,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "province",
+    "value": "Hà Tĩnh",
+    "sort_order": 24,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "province",
+    "value": "Hải Dương",
+    "sort_order": 25,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "province",
+    "value": "Hải Phòng",
+    "sort_order": 26,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "province",
+    "value": "Hậu Giang",
+    "sort_order": 27,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "province",
+    "value": "TP. Hồ Chí Minh",
+    "sort_order": 28,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "province",
+    "value": "Hòa Bình",
+    "sort_order": 29,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "province",
+    "value": "Hưng Yên",
+    "sort_order": 30,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "province",
+    "value": "Khánh Hòa",
+    "sort_order": 31,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "province",
+    "value": "Kiên Giang",
+    "sort_order": 32,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "province",
+    "value": "Kon Tum",
+    "sort_order": 33,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "province",
+    "value": "Lai Châu",
+    "sort_order": 34,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "province",
+    "value": "Lâm Đồng",
+    "sort_order": 35,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "province",
+    "value": "Lạng Sơn",
+    "sort_order": 36,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "province",
+    "value": "Lào Cai",
+    "sort_order": 37,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "province",
+    "value": "Long An",
+    "sort_order": 38,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "province",
+    "value": "Nam Định",
+    "sort_order": 39,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "province",
+    "value": "Nghệ An",
+    "sort_order": 40,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "province",
+    "value": "Ninh Bình",
+    "sort_order": 41,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "province",
+    "value": "Ninh Thuận",
+    "sort_order": 42,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "province",
+    "value": "Phú Thọ",
+    "sort_order": 43,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "province",
+    "value": "Phú Yên",
+    "sort_order": 44,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "province",
+    "value": "Quảng Bình",
+    "sort_order": 45,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "province",
+    "value": "Quảng Nam",
+    "sort_order": 46,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "province",
+    "value": "Quảng Ngãi",
+    "sort_order": 47,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "province",
+    "value": "Quảng Ninh",
+    "sort_order": 48,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "province",
+    "value": "Quảng Trị",
+    "sort_order": 49,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "province",
+    "value": "Sóc Trăng",
+    "sort_order": 50,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "province",
+    "value": "Sơn La",
+    "sort_order": 51,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "province",
+    "value": "Tây Ninh",
+    "sort_order": 52,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "province",
+    "value": "Thái Bình",
+    "sort_order": 53,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "province",
+    "value": "Thái Nguyên",
+    "sort_order": 54,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "province",
+    "value": "Thanh Hóa",
+    "sort_order": 55,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "province",
+    "value": "Thừa Thiên - Huế",
+    "sort_order": 56,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "province",
+    "value": "Tiền Giang",
+    "sort_order": 57,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "province",
+    "value": "Trà Vinh",
+    "sort_order": 58,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "province",
+    "value": "Tuyên Quang",
+    "sort_order": 59,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "province",
+    "value": "Vĩnh Long",
+    "sort_order": 60,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "province",
+    "value": "Vĩnh Phúc",
+    "sort_order": 61,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "province",
+    "value": "Yên Bái",
+    "sort_order": 62,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "source",
+    "value": "CareerLink",
+    "sort_order": 0,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "source",
+    "value": "CareerViet",
+    "sort_order": 1,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "source",
+    "value": "Chợ Tốt",
+    "sort_order": 2,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "source",
+    "value": "Facebook",
+    "sort_order": 3,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "source",
+    "value": "Hunt",
+    "sort_order": 4,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "source",
+    "value": "LinkedIn",
+    "sort_order": 5,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "source",
+    "value": "Nội bộ giới thiệu",
+    "sort_order": 6,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "source",
+    "value": "Taki",
+    "sort_order": 7,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "source",
+    "value": "TopCV",
+    "sort_order": 8,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "source",
+    "value": "TradeCV",
+    "sort_order": 9,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "source",
+    "value": "Vieclam24h",
+    "sort_order": 10,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "source",
+    "value": "Vietnamworks",
+    "sort_order": 11,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "source",
+    "value": "Ybox",
+    "sort_order": 12,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "source",
+    "value": "Zalo",
+    "sort_order": 13,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "source",
+    "value": "Vieclamcantho",
+    "sort_order": 14,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "source",
+    "value": "JobsGO",
+    "sort_order": 15,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "source",
+    "value": "Cá nhân",
+    "sort_order": 16,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "source",
+    "value": "Web công ty",
+    "sort_order": 17,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "source",
+    "value": "Pharma360",
+    "sort_order": 18,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "source",
+    "value": "Mail",
+    "sort_order": 19,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "source",
+    "value": "TopCV (chủ động lọc)",
+    "sort_order": 20,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "source",
+    "value": "Glints",
+    "sort_order": 21,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "source",
+    "value": "Joboko",
+    "sort_order": 22,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "cv_status",
+    "value": "Loại",
+    "sort_order": 0,
+    "meta": {
+      "stage": "dung"
+    },
+    "active": true
+  },
+  {
+    "type": "cv_status",
+    "value": "Phỏng vấn vòng 1",
+    "sort_order": 1,
+    "meta": {
+      "stage": "phong_van"
+    },
+    "active": true
+  },
+  {
+    "type": "cv_status",
+    "value": "Phỏng vấn vòng 2",
+    "sort_order": 2,
+    "meta": {
+      "stage": "phong_van"
+    },
+    "active": true
+  },
+  {
+    "type": "cv_status",
+    "value": "Phỏng vấn - loại",
+    "sort_order": 3,
+    "meta": {
+      "stage": "dung"
+    },
+    "active": true
+  },
+  {
+    "type": "cv_status",
+    "value": "Chờ nhận việc",
+    "sort_order": 4,
+    "meta": {
+      "stage": "nhan_viec"
+    },
+    "active": true
+  },
+  {
+    "type": "cv_status",
+    "value": "Nhận việc",
+    "sort_order": 5,
+    "meta": {
+      "stage": "nhan_viec"
+    },
+    "active": true
+  },
+  {
+    "type": "cv_status",
+    "value": "Đang liên hệ",
+    "sort_order": 6,
+    "meta": {
+      "stage": "moi_ve"
+    },
+    "active": true
+  },
+  {
+    "type": "cv_status",
+    "value": "Backup",
+    "sort_order": 7,
+    "meta": {
+      "stage": "cho_quyet_dinh"
+    },
+    "active": true
+  },
+  {
+    "type": "cv_status",
+    "value": "Từ chối nhận việc",
+    "sort_order": 8,
+    "meta": {
+      "stage": "dung"
+    },
+    "active": true
+  },
+  {
+    "type": "cv_status",
+    "value": "Không đến PV",
+    "sort_order": 9,
+    "meta": {
+      "stage": "dung"
+    },
+    "active": true
+  },
+  {
+    "type": "cv_status",
+    "value": "Chưa lên hệ được",
+    "sort_order": 10,
+    "meta": {
+      "stage": "moi_ve"
+    },
+    "active": true
+  },
+  {
+    "type": "cv_status",
+    "value": "PV đạt - backup",
+    "sort_order": 11,
+    "meta": {
+      "stage": "cho_quyet_dinh"
+    },
+    "active": true
+  },
+  {
+    "type": "cv_status",
+    "value": "PV đạt - vòng 1",
+    "sort_order": 12,
+    "meta": {
+      "stage": "phong_van"
+    },
+    "active": true
+  },
+  {
+    "type": "stage",
+    "value": "Mới về",
+    "sort_order": 0,
+    "meta": {
+      "key": "moi_ve"
+    },
+    "active": true
+  },
+  {
+    "type": "stage",
+    "value": "Phỏng vấn",
+    "sort_order": 1,
+    "meta": {
+      "key": "phong_van"
+    },
+    "active": true
+  },
+  {
+    "type": "stage",
+    "value": "Chờ quyết định",
+    "sort_order": 2,
+    "meta": {
+      "key": "cho_quyet_dinh"
+    },
+    "active": true
+  },
+  {
+    "type": "stage",
+    "value": "Nhận việc",
+    "sort_order": 3,
+    "meta": {
+      "key": "nhan_viec"
+    },
+    "active": true
+  },
+  {
+    "type": "stage",
+    "value": "Dừng",
+    "sort_order": 4,
+    "meta": {
+      "key": "dung"
+    },
+    "active": true
+  },
+  {
+    "type": "screener",
+    "value": "Hân",
+    "sort_order": 0,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "screener",
+    "value": "TTS Linh",
+    "sort_order": 1,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "screener",
+    "value": "Thủy",
+    "sort_order": 2,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "interviewer",
+    "value": "Ms Kim",
+    "sort_order": 0,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "interviewer",
+    "value": "Ms Thu",
+    "sort_order": 1,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "interviewer",
+    "value": "Ms Linh",
+    "sort_order": 2,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "interviewer",
+    "value": "Ms Lan",
+    "sort_order": 3,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "interviewer",
+    "value": "Mr Hải",
+    "sort_order": 4,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "interviewer",
+    "value": "Mr Quang",
+    "sort_order": 5,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "interviewer",
+    "value": "Mr Hiển",
+    "sort_order": 6,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "interviewer",
+    "value": "Mr. Khải",
+    "sort_order": 7,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "interviewer",
+    "value": "Ms. Ly",
+    "sort_order": 8,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "interviewer",
+    "value": "Mr. Công",
+    "sort_order": 9,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "interviewer",
+    "value": "Linh HCNS",
+    "sort_order": 10,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "interviewer",
+    "value": "Ms Hải - KTT",
+    "sort_order": 11,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "interview_mode",
+    "value": "Online",
+    "sort_order": 0,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "interview_mode",
+    "value": "Offline HN",
+    "sort_order": 1,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "interview_mode",
+    "value": "Offline HCM",
+    "sort_order": 2,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "interview_result",
+    "value": "Đạt",
+    "sort_order": 0,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "interview_result",
+    "value": "Không đạt",
+    "sort_order": 1,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "interview_result",
+    "value": "Back up",
+    "sort_order": 2,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "offer_status",
+    "value": "Đã gửi offer",
+    "sort_order": 0,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "offer_status",
+    "value": "Chưa gửi offer",
+    "sort_order": 1,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "onboard_status",
+    "value": "Pass 7 ngày thử việc",
+    "sort_order": 0,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "onboard_status",
+    "value": "Không đạt sau 7 ngày thử việc",
+    "sort_order": 1,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "onboard_status",
+    "value": "Pass 1 tháng thử việc",
+    "sort_order": 2,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "onboard_status",
+    "value": "Pass 2 tháng thử việc",
+    "sort_order": 3,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "onboard_status",
+    "value": "Nghỉ việc",
+    "sort_order": 4,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "onboard_status",
+    "value": "Nhận việc",
+    "sort_order": 5,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "onboard_owner",
+    "value": "Khuyên",
+    "sort_order": 0,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "onboard_owner",
+    "value": "Chinh",
+    "sort_order": 1,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "onboard_owner",
+    "value": "Diệu",
+    "sort_order": 2,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "onboard_owner",
+    "value": "KA",
+    "sort_order": 3,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "onboard_owner",
+    "value": "Ngọc",
+    "sort_order": 4,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "onboard_owner",
+    "value": "Tên HR",
+    "sort_order": 5,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "onboard_owner",
+    "value": "Trang",
+    "sort_order": 6,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "onboard_owner",
+    "value": "TTS Nga",
+    "sort_order": 7,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "onboard_owner",
+    "value": "Yến",
+    "sort_order": 8,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "onboard_owner",
+    "value": "Linh",
+    "sort_order": 9,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "onboard_owner",
+    "value": "Hân",
+    "sort_order": 10,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "onboard_owner",
+    "value": "TTS Hiếu",
+    "sort_order": 11,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "onboard_owner",
+    "value": "TTS Linh",
+    "sort_order": 12,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "onboard_owner",
+    "value": "Thủy",
+    "sort_order": 13,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "onboard_office",
+    "value": "Hà Nội",
+    "sort_order": 0,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "onboard_office",
+    "value": "TP.HCM",
+    "sort_order": 1,
+    "meta": {},
+    "active": true
+  },
+  {
+    "type": "onboard_task_group",
+    "value": "Pre-onboard (1–3 ngày trước)",
+    "sort_order": 0,
+    "meta": {
+      "key": "pre"
+    },
+    "active": true
+  },
+  {
+    "type": "onboard_task_group",
+    "value": "Ngày onboard",
+    "sort_order": 1,
+    "meta": {
+      "key": "ngay_onboard"
+    },
+    "active": true
+  },
+  {
+    "type": "onboard_task_group",
+    "value": "Thông tin & tờ khai BHXH, thuế TNCN",
+    "sort_order": 2,
+    "meta": {
+      "key": "giay_to"
+    },
+    "active": true
+  },
+  {
+    "type": "onboard_task_group",
+    "value": "Ký cam kết nhân sự",
+    "sort_order": 3,
+    "meta": {
+      "key": "cam_ket"
+    },
+    "active": true
+  },
+  {
+    "type": "onboard_task_group",
+    "value": "Đào tạo và hội nhập",
+    "sort_order": 4,
+    "meta": {
+      "key": "dao_tao"
+    },
+    "active": true
+  },
+  {
+    "type": "onboard_task",
+    "value": "Tạo group hội nhập / gửi ảnh chào mừng và dặn dò",
+    "sort_order": 0,
+    "meta": {
+      "key": "pre_group",
+      "group": "pre"
+    },
+    "active": true
+  },
+  {
+    "type": "onboard_task",
+    "value": "Chuẩn bị cơ sở vật chất",
+    "sort_order": 1,
+    "meta": {
+      "key": "pre_csvc",
+      "group": "pre"
+    },
+    "active": true
+  },
+  {
+    "type": "onboard_task",
+    "value": "UV đến onboard",
+    "sort_order": 2,
+    "meta": {
+      "key": "day_den",
+      "group": "ngay_onboard"
+    },
+    "active": true
+  },
+  {
+    "type": "onboard_task",
+    "value": "Tiếp nhận hồ sơ nhân viên onboard",
+    "sort_order": 3,
+    "meta": {
+      "key": "day_ho_so",
+      "group": "ngay_onboard"
+    },
+    "active": true
+  },
+  {
+    "type": "onboard_task",
+    "value": "Cấp phát trang thiết bị",
+    "sort_order": 4,
+    "meta": {
+      "key": "day_thiet_bi",
+      "group": "ngay_onboard"
+    },
+    "active": true
+  },
+  {
+    "type": "onboard_task",
+    "value": "Tờ khai tham gia BHXH",
+    "sort_order": 5,
+    "meta": {
+      "key": "kb_bhxh",
+      "group": "giay_to"
+    },
+    "active": true
+  },
+  {
+    "type": "onboard_task",
+    "value": "Tờ khai thuế TNCN (có MST)",
+    "sort_order": 6,
+    "meta": {
+      "key": "kb_tncn",
+      "group": "giay_to"
+    },
+    "active": true
+  },
+  {
+    "type": "onboard_task",
+    "value": "Giấy ủy quyền đăng ký MST TNCN (chưa có MST)",
+    "sort_order": 7,
+    "meta": {
+      "key": "kb_mst",
+      "group": "giay_to"
+    },
+    "active": true
+  },
+  {
+    "type": "onboard_task",
+    "value": "Cam kết sử dụng tài nguyên của công ty",
+    "sort_order": 8,
+    "meta": {
+      "key": "ck_tai_nguyen",
+      "group": "cam_ket"
+    },
+    "active": true
+  },
+  {
+    "type": "onboard_task",
+    "value": "Cam kết nộp đủ hồ sơ còn thiếu đúng thời hạn",
+    "sort_order": 9,
+    "meta": {
+      "key": "ck_ho_so",
+      "group": "cam_ket"
+    },
+    "active": true
+  },
+  {
+    "type": "onboard_task",
+    "value": "Ký xác nhận Quy định Chấm công",
+    "sort_order": 10,
+    "meta": {
+      "key": "ck_cham_cong",
+      "group": "cam_ket"
+    },
+    "active": true
+  },
+  {
+    "type": "onboard_task",
+    "value": "Ký xác nhận Quy định Đào tạo",
+    "sort_order": 11,
+    "meta": {
+      "key": "ck_dao_tao",
+      "group": "cam_ket"
+    },
+    "active": true
+  },
+  {
+    "type": "onboard_task",
+    "value": "Quy định về trách nhiệm bồi thường thiệt hại",
+    "sort_order": 12,
+    "meta": {
+      "key": "ck_boi_thuong",
+      "group": "cam_ket"
+    },
+    "active": true
+  },
+  {
+    "type": "onboard_task",
+    "value": "Giới thiệu về Doanh nghiệp",
+    "sort_order": 13,
+    "meta": {
+      "key": "dt_doanh_nghiep",
+      "group": "dao_tao"
+    },
+    "active": true
+  },
+  {
+    "type": "onboard_task",
+    "value": "Đào tạo về sản phẩm công ty (tùy vị trí)",
+    "sort_order": 14,
+    "meta": {
+      "key": "dt_san_pham",
+      "group": "dao_tao"
+    },
+    "active": true
+  },
+  {
+    "type": "onboard_task",
+    "value": "Đào tạo về ứng dụng AI",
+    "sort_order": 15,
+    "meta": {
+      "key": "dt_ai",
+      "group": "dao_tao"
+    },
+    "active": true
+  },
+  {
+    "type": "onboard_task",
+    "value": "Share tài liệu về AI",
+    "sort_order": 16,
+    "meta": {
+      "key": "dt_tai_lieu_ai",
+      "group": "dao_tao"
+    },
+    "active": true
+  }
+]

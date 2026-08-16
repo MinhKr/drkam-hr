@@ -1,0 +1,44 @@
+# =====================================================================
+# DỮ LIỆU THẬT CỦA ỨNG VIÊN — TUYỆT ĐỐI KHÔNG ĐẨY LÊN GITHUB
+# Chứa họ tên, số điện thoại, email, nhận xét sàng lọc của người thật.
+# Đẩy lên rồi thì xoá đi vẫn còn trong lịch sử commit.
+# =====================================================================
+*.xlsx
+*.xls
+*.csv
+web/supabase/seed_data.sql
+
+# Khoá kết nối
+.env
+.env.*
+!.env.local.example
+
+# Bộ skill UI dùng tham khảo — là repo git riêng, không thuộc dự án này
+ui-ux-pro-max-skill/
+
+# Thư viện và bản dựng
+node_modules/
+.next/
+out/
+build/
+dist/
+*.tsbuildinfo
+next-env.d.ts
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Hệ điều hành và trình soạn thảo
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+
+# Nhật ký
+*.log
+npm-debug.log*
+yarn-error.log*
