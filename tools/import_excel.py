@@ -2,6 +2,14 @@
 """
 Nạp dữ liệu thật từ DATA UV DRKAM 2026.xlsx vào cơ sở dữ liệu.
 
+KHÔNG DÙNG NỮA kể từ 17/08/2026: đã chốt là app nhập mới hoàn toàn, không
+mang dữ liệu ứng viên cũ sang. Giữ lại để sau này cần thì có sẵn.
+
+CẨN THẬN NẾU DÙNG LẠI: script ghi vào schema "public" (trước đây là schema
+riêng "tuyendung"). Chỉ trỏ vào project Supabase RIÊNG của app tuyển dụng —
+NEXT_PUBLIC_SUPABASE_URL trong web/.env.local phải là project đó. Trỏ nhầm
+sang project của app khác là ghi đè lên dữ liệu của app đó.
+
   Xem trước, không ghi gì (nên chạy đầu tiên):
       python tools/import_excel.py
 
@@ -39,7 +47,7 @@ XLSX = ROOT / "DATA UV DRKAM 2026.xlsx"
 ENV = ROOT / "web" / ".env.local"
 
 # Bảng nằm trong schema riêng vì dùng chung project Supabase với app khác
-DB_SCHEMA = "tuyendung"
+DB_SCHEMA = "public"
 
 SOURCE_ALIASES = {
     "face": "Facebook",
@@ -272,11 +280,11 @@ def sinh_sql(ung_vien, phong_van, onboard) -> str:
         "-- Tắt trigger trong lúc nạp: giữ nguyên trạng thái lịch sử của từng ứng viên",
         "-- (nếu để bật, trigger sẽ tính lại trạng thái từ kết quả PV và ghi đè dữ liệu cũ)",
         "-- đồng thời không đổ hàng nghìn dòng vào nhật ký thay đổi.",
-        "alter table tuyendung.interviews  disable trigger interviews_sync_status;",
-        "alter table tuyendung.interviews  disable trigger interviews_sync_scheduled;",
-        "alter table tuyendung.candidates  disable trigger candidates_log;",
-        "alter table tuyendung.interviews  disable trigger interviews_log;",
-        "alter table tuyendung.onboardings disable trigger onboardings_log;",
+        "alter table public.interviews  disable trigger interviews_sync_status;",
+        "alter table public.interviews  disable trigger interviews_sync_scheduled;",
+        "alter table public.candidates  disable trigger candidates_log;",
+        "alter table public.interviews  disable trigger interviews_log;",
+        "alter table public.onboardings disable trigger onboardings_log;",
         "",
     ]
 
@@ -287,7 +295,7 @@ def sinh_sql(ung_vien, phong_van, onboard) -> str:
         "offer_status", "planned_onboard_date", "actual_onboard_date",
     ]
 
-    L.append(f"insert into tuyendung.candidates ({', '.join(cot_uv)}) values")
+    L.append(f"insert into public.candidates ({', '.join(cot_uv)}) values")
     L.append(
         ",\n".join("  (" + ", ".join(q(uv.get(c)) for c in cot_uv) + ")" for uv in ung_vien)
     )
@@ -298,17 +306,17 @@ def sinh_sql(ung_vien, phong_van, onboard) -> str:
         L.append("-- Lịch phỏng vấn: ghép với ứng viên theo số điện thoại, không có thì theo họ tên")
         for pv in phong_van:
             dieu_kien = (
-                f"phone_norm = tuyendung.f_phone_norm({q(pv['_sdt'])})"
+                f"phone_norm = public.f_phone_norm({q(pv['_sdt'])})"
                 if pv["_sdt"]
                 else f"full_name = {q(pv['_ten'])}"
             )
             mang = "array[" + ", ".join(q(i) for i in pv["interviewers"]) + "]::text[]"
             L.append(
-                "insert into tuyendung.interviews "
+                "insert into public.interviews "
                 "(candidate_id, round, scheduled_date, scheduled_time, mode, interviewers, result, note, result_email_sent)\n"
                 f"select id, {pv['round']}, {q(pv['scheduled_date'])}, {q(pv['scheduled_time'])}, "
                 f"{q(pv['mode'])}, {mang}, {q(pv['result'])}, {q(pv['note'])}, {q(pv['result_email_sent'])}\n"
-                f"  from tuyendung.candidates where {dieu_kien} "
+                f"  from public.candidates where {dieu_kien} "
                 "order by created_at desc limit 1\n"
                 "on conflict (candidate_id, round) do nothing;"
             )
@@ -318,7 +326,7 @@ def sinh_sql(ung_vien, phong_van, onboard) -> str:
         L.append("-- Onboard: ghép theo họ tên")
         for ob in onboard:
             L.append(
-                "insert into tuyendung.onboardings "
+                "insert into public.onboardings "
                 "(candidate_id, onboard_date, office, checklist, assignee_pre, pre_note, "
                 "assignee_docs, assignee_training, status, review_7d_result, review_1m_result, "
                 "review_2m_result, owner, note)\n"
@@ -326,18 +334,18 @@ def sinh_sql(ung_vien, phong_van, onboard) -> str:
                 f"{q(ob['assignee_pre'])}, {q(ob['pre_note'])}, {q(ob['assignee_docs'])}, "
                 f"{q(ob['assignee_training'])}, {q(ob['status'])}, {q(ob['review_7d_result'])}, "
                 f"{q(ob['review_1m_result'])}, {q(ob['review_2m_result'])}, {q(ob['owner'])}, {q(ob['note'])}\n"
-                f"  from tuyendung.candidates where full_name = {q(ob['_ten'])} "
+                f"  from public.candidates where full_name = {q(ob['_ten'])} "
                 "order by created_at desc limit 1\n"
                 "on conflict (candidate_id) do nothing;"
             )
         L.append("")
 
     L.append("-- Bật lại trigger")
-    L.append("alter table tuyendung.interviews  enable trigger interviews_sync_status;")
-    L.append("alter table tuyendung.interviews  enable trigger interviews_sync_scheduled;")
-    L.append("alter table tuyendung.candidates  enable trigger candidates_log;")
-    L.append("alter table tuyendung.interviews  enable trigger interviews_log;")
-    L.append("alter table tuyendung.onboardings enable trigger onboardings_log;")
+    L.append("alter table public.interviews  enable trigger interviews_sync_status;")
+    L.append("alter table public.interviews  enable trigger interviews_sync_scheduled;")
+    L.append("alter table public.candidates  enable trigger candidates_log;")
+    L.append("alter table public.interviews  enable trigger interviews_log;")
+    L.append("alter table public.onboardings enable trigger onboardings_log;")
     L.append("")
     L.append("commit;")
     return "\n".join(L)

@@ -3,7 +3,11 @@
 -- Đừng sửa tay file này; sửa tools/gen_seed.py rồi chạy: python tools/gen_seed.py
 -- =====================================================================
 
-insert into tuyendung.catalogs (type, value, sort_order, meta) values
+-- Chốt an toàn: dừng nếu đây không phải project riêng của app tuyển dụng.
+-- Hàm này do 0001_init.sql tạo ra, project khác không có nên sẽ báo lỗi ngay.
+select public.f_kiem_tra_project();
+
+insert into public.catalogs (type, value, sort_order, meta) values
   ('position', 'Ads', 0, '{"department": "Marketing", "level": "Nhân viên"}'::jsonb),
   ('position', 'Ads chạy kênh AI', 1, '{"department": "Marketing", "level": "Nhân viên"}'::jsonb),
   ('position', 'Biên kịch Tiktok', 2, '{"department": "Marketing", "level": "Nhân viên"}'::jsonb),

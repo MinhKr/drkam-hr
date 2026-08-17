@@ -8,17 +8,20 @@
 -- Chạy trong Supabase SQL Editor, sau 0005.
 -- =====================================================================
 
-set search_path = tuyendung, public, extensions;
+-- Chốt an toàn: dừng nếu đây không phải project riêng của app tuyển dụng
+select public.f_kiem_tra_project();
+
+set search_path = public, extensions;
 
 -- 1. Trạng thái mặc định
-alter table tuyendung.onboardings alter column status set default 'Nhận việc';
-update tuyendung.onboardings set status = 'Nhận việc' where status is null;
+alter table public.onboardings alter column status set default 'Nhận việc';
+update public.onboardings set status = 'Nhận việc' where status is null;
 
 
 -- 2. View
-drop view if exists tuyendung.v_onboard;
+drop view if exists public.v_onboard;
 
-create view tuyendung.v_onboard
+create view public.v_onboard
 with (security_invoker = on)
 as
 select
@@ -41,10 +44,10 @@ select
       from jsonb_each(o.checklist) as x(k, v)
      where v = 'true'::jsonb
   )                                            as so_viec_xong
-from tuyendung.onboardings o
-join tuyendung.candidates c on c.id = o.candidate_id;
+from public.onboardings o
+join public.candidates c on c.id = o.candidate_id;
 
-grant select on tuyendung.v_onboard to anon, authenticated, service_role;
+grant select on public.v_onboard to anon, authenticated, service_role;
 
-comment on view tuyendung.v_onboard is
+comment on view public.v_onboard is
   'Nhân sự onboard kèm số ngày còn lại tới hạn đánh giá và số mục checklist đã xong';

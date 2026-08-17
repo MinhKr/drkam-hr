@@ -277,7 +277,7 @@ for type_name, items in buckets:
     for i, (value, meta) in enumerate(items):
         rows_sql.append(f"  ({q(type_name)}, {q(value)}, {i}, {meta_json(meta)})")
 
-lines.append("insert into tuyendung.catalogs (type, value, sort_order, meta) values")
+lines.append("insert into public.catalogs (type, value, sort_order, meta) values")
 lines.append(",\n".join(rows_sql))
 lines.append("on conflict (type, value) do update")
 lines.append("  set sort_order = excluded.sort_order,")

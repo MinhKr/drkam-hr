@@ -3,11 +3,15 @@ export const SUPABASE_URL = (process.env.NEXT_PUBLIC_SUPABASE_URL ?? "").trim().
 export const SUPABASE_ANON_KEY = (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "").trim();
 
 /**
- * App dùng chung project Supabase với các app khác của công ty, nên toàn bộ
- * bảng nằm trong schema riêng — không đụng gì tới schema public của app cũ.
- * Nhớ thêm tên schema này vào Settings → API → Exposed schemas.
+ * App có project Supabase riêng nên bảng nằm ngay trong schema public —
+ * không phải thêm gì vào Settings → API → Exposed schemas nữa.
+ *
+ * Trước đây giá trị này là "tuyendung": hồi app còn dùng chung project với
+ * app dashboard cũ, phải để bảng trong schema riêng cho khỏi đụng vào public
+ * của app kia. Đổi lại giá trị này thì nhớ đổi cả tên schema trong
+ * web/supabase/migrations/*.sql.
  */
-export const DB_SCHEMA = "tuyendung";
+export const DB_SCHEMA = "public";
 
 /**
  * Chưa điền .env.local thì app vẫn chạy được ở chế độ xem trước:

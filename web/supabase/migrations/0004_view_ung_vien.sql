@@ -11,7 +11,10 @@
 -- Chạy trong Supabase SQL Editor, sau 0001 và 0002.
 -- =====================================================================
 
-set search_path = tuyendung, public, extensions;
+-- Chốt an toàn: dừng nếu đây không phải project riêng của app tuyển dụng
+select public.f_kiem_tra_project();
+
+set search_path = public, extensions;
 
 
 -- ---------------------------------------------------------------------
@@ -19,9 +22,9 @@ set search_path = tuyendung, public, extensions;
 --    security_invoker = on  ->  vẫn áp dụng RLS của bảng gốc.
 --    Thiếu dòng này thì người chưa đăng nhập đọc được hết dữ liệu.
 -- ---------------------------------------------------------------------
-drop view if exists tuyendung.v_ung_vien;
+drop view if exists public.v_ung_vien;
 
-create view tuyendung.v_ung_vien
+create view public.v_ung_vien
 with (security_invoker = on)
 as
 select
@@ -32,32 +35,32 @@ select
   pv.kq_pv2,
   (current_date - c.received_at)                           as so_ngay_cho,
   (ob.candidate_id is not null)                            as da_onboard
-from tuyendung.candidates c
+from public.candidates c
 left join lateral (
   select
     count(*) filter (where i.scheduled_date is not null)          as so_lich,
     max(i.scheduled_date)                                          as ngay_pv_gan_nhat,
     max(i.result) filter (where i.round = 1)                       as kq_pv1,
     max(i.result) filter (where i.round = 2)                       as kq_pv2
-  from tuyendung.interviews i
+  from public.interviews i
   where i.candidate_id = c.id
 ) pv on true
-left join tuyendung.onboardings ob on ob.candidate_id = c.id;
+left join public.onboardings ob on ob.candidate_id = c.id;
 
-grant select on tuyendung.v_ung_vien to anon, authenticated, service_role;
+grant select on public.v_ung_vien to anon, authenticated, service_role;
 
-comment on view tuyendung.v_ung_vien is
+comment on view public.v_ung_vien is
   'Ứng viên kèm số lịch PV, kết quả từng vòng và số ngày chờ — dùng cho màn hình Quản lý CV';
 
 
 -- ---------------------------------------------------------------------
 -- 2. Sửa trigger: nhận cả hai cách viết của trạng thái "chưa liên hệ"
 -- ---------------------------------------------------------------------
-create or replace function tuyendung.tg_interview_sync_scheduled()
+create or replace function public.tg_interview_sync_scheduled()
 returns trigger language plpgsql as $$
 begin
   if new.scheduled_date is not null then
-    update tuyendung.candidates
+    update public.candidates
        set status = case when new.round = 1 then 'Phỏng vấn vòng 1' else 'Phỏng vấn vòng 2' end
      where id = new.candidate_id
        and status in (
