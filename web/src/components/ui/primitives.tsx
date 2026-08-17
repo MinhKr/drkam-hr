@@ -3,6 +3,23 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+/* ------------------------------------------------- Khung chờ (skeleton) */
+
+/**
+ * Ô xám nhấp nháy, dùng trong loading.tsx để hiện ngay hình dáng trang
+ * trong lúc chờ máy chủ. Có nó thì bấm chuyển tab là thấy đổi liền,
+ * không phải ngồi nhìn trang cũ.
+ */
+export function Khung({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div
+      aria-hidden
+      className={cn("animate-pulse rounded-[var(--r-sm)] bg-[var(--surface-2)]", className)}
+      {...props}
+    />
+  );
+}
+
 /* ------------------------------------------------------------------ Thẻ */
 export function Card({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (

@@ -1,3 +1,4 @@
+import { cache } from "react";
 import catalogsJson from "@/data/catalogs.json";
 import { taoSupabaseServer } from "./supabase/server";
 import type { DanhMuc, GiaiDoan, LoaiDanhMuc } from "./types";
@@ -10,28 +11,38 @@ export type NguonDanhMuc = "co_so_du_lieu" | "du_phong";
  * Đọc toàn bộ danh mục, kèm cho biết lấy từ đâu.
  * Có Supabase và bảng có dữ liệu thì lấy từ bảng catalogs,
  * còn lại lùi về bản sinh từ Excel (src/data/catalogs.json).
+ *
+ * Bọc trong `cache()` của React: mỗi lần dựng trang chỉ gọi cơ sở dữ liệu
+ * MỘT lần, dù bên trong trang gọi lại bao nhiêu lần cũng dùng chung kết quả.
+ * Cần thiết vì `layTheoLoai` / `layGiaTri` / `banDoGiaiDoan` đều gọi hàm này,
+ * mà riêng trang Quản lý CV gọi 14 lần — trước đây là 14 lượt tải cả 237 dòng.
+ *
+ * Chỉ nhớ trong một lượt dựng trang, không nhớ xuyên request: hàm đọc cookie
+ * phiên đăng nhập nên không được lưu chung giữa những người dùng khác nhau.
  */
-export async function layDanhMucCoNguon(): Promise<{
-  muc: DanhMuc[];
-  nguon: NguonDanhMuc;
-  loi?: string;
-}> {
-  const supabase = await taoSupabaseServer();
-  if (!supabase) return { muc: duPhong, nguon: "du_phong" };
+export const layDanhMucCoNguon = cache(
+  async (): Promise<{
+    muc: DanhMuc[];
+    nguon: NguonDanhMuc;
+    loi?: string;
+  }> => {
+    const supabase = await taoSupabaseServer();
+    if (!supabase) return { muc: duPhong, nguon: "du_phong" };
 
-  const { data, error } = await supabase
-    .from("catalogs")
-    .select("id, type, value, sort_order, active, meta")
-    .eq("active", true)
-    .order("type")
-    .order("sort_order");
+    const { data, error } = await supabase
+      .from("catalogs")
+      .select("id, type, value, sort_order, active, meta")
+      .eq("active", true)
+      .order("type")
+      .order("sort_order");
 
-  if (error) return { muc: duPhong, nguon: "du_phong", loi: error.message };
-  if (!data || data.length === 0)
-    return { muc: duPhong, nguon: "du_phong", loi: "Bảng catalogs chưa có dòng nào" };
+    if (error) return { muc: duPhong, nguon: "du_phong", loi: error.message };
+    if (!data || data.length === 0)
+      return { muc: duPhong, nguon: "du_phong", loi: "Bảng catalogs chưa có dòng nào" };
 
-  return { muc: data as DanhMuc[], nguon: "co_so_du_lieu" };
-}
+    return { muc: data as DanhMuc[], nguon: "co_so_du_lieu" };
+  },
+);
 
 export async function layDanhMuc(): Promise<DanhMuc[]> {
   return (await layDanhMucCoNguon()).muc;
