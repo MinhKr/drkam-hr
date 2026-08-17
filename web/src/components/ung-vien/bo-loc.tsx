@@ -2,9 +2,10 @@
 
 import { useEffect, useRef, useState, useTransition } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { RotateCcw, Search } from "lucide-react";
+import { Download, RotateCcw, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input, Select } from "@/components/ui/primitives";
+import { cn } from "@/lib/utils";
 
 export type NhomChon = {
   vi_tri: string[];
@@ -24,7 +25,7 @@ const O_CHON: { khoa: keyof NhomChon; nhan: string }[] = [
   { khoa: "khu_vuc", nhan: "Khu vực" },
 ];
 
-export function BoLoc({ nhom }: { nhom: NhomChon }) {
+export function BoLoc({ nhom, tong }: { nhom: NhomChon; tong: number }) {
   const router = useRouter();
   const pathname = usePathname();
   const sp = useSearchParams();
@@ -56,6 +57,15 @@ export function BoLoc({ nhom }: { nhom: NhomChon }) {
   }, [tuKhoa]);
 
   const dangLoc = Array.from(sp.keys()).some((k) => k !== "trang" && k !== "uv");
+
+  // xuất hết những dòng khớp bộ lọc, không phải chỉ trang đang xem
+  const duongDanXuat = (() => {
+    const p = new URLSearchParams(sp.toString());
+    p.delete("trang");
+    p.delete("uv");
+    const s = p.toString();
+    return s ? `/ung-vien/xuat?${s}` : "/ung-vien/xuat";
+  })();
 
   return (
     <div className="flex flex-wrap items-center gap-2 rounded-[var(--card-radius)] border border-[var(--card-border)] bg-[var(--card-bg)] p-3">
@@ -108,6 +118,26 @@ export function BoLoc({ nhom }: { nhom: NhomChon }) {
           onChange={(e) => dat({ den_ngay: e.target.value || null })}
         />
       </div>
+
+      <Button
+        asChild
+        variant="outline"
+        size="sm"
+        className={cn(tong === 0 && "pointer-events-none opacity-40")}
+      >
+        <a
+          href={duongDanXuat}
+          title={
+            dangLoc
+              ? `Tải ${tong.toLocaleString("vi-VN")} dòng đang lọc thành file Excel`
+              : `Tải toàn bộ ${tong.toLocaleString("vi-VN")} ứng viên thành file Excel`
+          }
+        >
+          <Download />
+          Xuất Excel
+          <span className="tabular text-[var(--ink-muted)]">{tong.toLocaleString("vi-VN")}</span>
+        </a>
+      </Button>
 
       {dangLoc && (
         <Button

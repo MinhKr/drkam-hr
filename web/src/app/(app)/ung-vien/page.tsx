@@ -6,36 +6,31 @@ import type { ChonLua } from "@/components/ung-vien/form-ung-vien";
 import { Card, CardBody } from "@/components/ui/primitives";
 import { banDoGiaiDoan, layGiaTri, layTheoLoai } from "@/lib/danh-muc";
 import { layLichTheoUngVien } from "@/lib/phong-van";
-import { MOI_TRANG, demCanhBao, layDanhSachUngVien, type BoLoc as Loc } from "@/lib/ung-vien";
+import {
+  MOI_TRANG,
+  demCanhBao,
+  docBoLoc,
+  layDanhSachUngVien,
+  type BoLoc as Loc,
+} from "@/lib/ung-vien";
 import { cn } from "@/lib/utils";
 
 export const metadata = { title: "Quản lý CV" };
 
 type Params = Record<string, string | string[] | undefined>;
 
-function lay(sp: Params, khoa: string) {
-  const v = sp[khoa];
-  return typeof v === "string" && v !== "" ? v : undefined;
-}
-
 export default async function TrangUngVien(props: {
   searchParams: Promise<Params>;
 }) {
   const sp = await props.searchParams;
 
-  const loc: Loc = {
-    q: lay(sp, "q"),
-    vi_tri: lay(sp, "vi_tri"),
-    phong_ban: lay(sp, "phong_ban"),
-    trang_thai: lay(sp, "trang_thai"),
-    nguon: lay(sp, "nguon"),
-    nguoi_sang_loc: lay(sp, "nguoi_sang_loc"),
-    khu_vuc: lay(sp, "khu_vuc"),
-    tu_ngay: lay(sp, "tu_ngay"),
-    den_ngay: lay(sp, "den_ngay"),
-    canh_bao: lay(sp, "canh_bao") as Loc["canh_bao"],
-    trang: Number(lay(sp, "trang") ?? 1),
-  };
+  // gom về URLSearchParams để trang này và route xuất Excel đọc bộ lọc bằng cùng một hàm
+  const qs = new URLSearchParams();
+  for (const [khoa, v] of Object.entries(sp)) {
+    if (typeof v === "string" && v) qs.set(khoa, v);
+  }
+
+  const loc: Loc = docBoLoc(qs);
 
   const [
     { rows, tong, loi },
@@ -119,10 +114,9 @@ export default async function TrangUngVien(props: {
   ] as const;
 
   function duongDan(canhBao?: string) {
-    const p = new URLSearchParams();
-    for (const [k, v] of Object.entries(sp)) {
-      if (typeof v === "string" && v && k !== "canh_bao" && k !== "trang") p.set(k, v);
-    }
+    const p = new URLSearchParams(qs);
+    p.delete("canh_bao");
+    p.delete("trang");
     if (canhBao) p.set("canh_bao", canhBao);
     const s = p.toString();
     return s ? `/ung-vien?${s}` : "/ung-vien";
@@ -132,10 +126,8 @@ export default async function TrangUngVien(props: {
   const trangHienTai = Math.min(Math.max(1, loc.trang ?? 1), soTrang);
 
   function duongDanTrang(t: number) {
-    const p = new URLSearchParams();
-    for (const [k, v] of Object.entries(sp)) {
-      if (typeof v === "string" && v && k !== "trang") p.set(k, v);
-    }
+    const p = new URLSearchParams(qs);
+    p.delete("trang");
     if (t > 1) p.set("trang", String(t));
     const s = p.toString();
     return s ? `/ung-vien?${s}` : "/ung-vien";
@@ -186,6 +178,7 @@ export default async function TrangUngVien(props: {
           nguoi_sang_loc: chon.nguoi_sang_loc,
           khu_vuc: chon.khu_vuc,
         }}
+        tong={tong}
       />
 
       {loi && (

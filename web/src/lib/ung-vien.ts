@@ -27,6 +27,24 @@ export type BoLoc = {
 
 export const MOI_TRANG = 25;
 
+/** Đọc bộ lọc từ query string — dùng chung cho trang danh sách và route xuất Excel */
+export function docBoLoc(sp: URLSearchParams): BoLoc {
+  const lay = (khoa: string) => sp.get(khoa) || undefined;
+  return {
+    q: lay("q"),
+    vi_tri: lay("vi_tri"),
+    phong_ban: lay("phong_ban"),
+    trang_thai: lay("trang_thai"),
+    nguon: lay("nguon"),
+    nguoi_sang_loc: lay("nguoi_sang_loc"),
+    khu_vuc: lay("khu_vuc"),
+    tu_ngay: lay("tu_ngay"),
+    den_ngay: lay("den_ngay"),
+    canh_bao: lay("canh_bao") as BoLoc["canh_bao"],
+    trang: Number(lay("trang") ?? 1),
+  };
+}
+
 /** Trạng thái coi như đã khép hồ sơ — không tính vào các cảnh báo cần xử lý */
 const TRANG_THAI_DA_DONG = [
   "Loại",
@@ -93,6 +111,37 @@ export async function layDanhSachUngVien(
   if (error) return { rows: [], tong: 0, loi: error.message };
 
   return { rows: (data ?? []) as UngVienRow[], tong: count ?? 0 };
+}
+
+/** PostgREST trả tối đa 1000 dòng một lần nên phải đọc theo lô */
+const LO_XUAT = 1000;
+/** Chặn trên cho một lần xuất — 50 nghìn dòng đã quá xa nhu cầu thực tế */
+const TOI_DA_XUAT = 50_000;
+
+/**
+ * Lấy toàn bộ dòng khớp bộ lọc, bỏ qua phân trang — dùng cho xuất Excel.
+ * Bộ lọc y hệt danh sách trên màn hình nên file xuất ra khớp đúng cái đang xem.
+ */
+export async function layToanBoDeXuat(
+  loc: BoLoc,
+): Promise<{ rows: UngVienRow[]; cat: boolean; loi?: string }> {
+  const supabase = await taoSupabaseServer();
+  if (!supabase) return { rows: [], cat: false, loi: "Chưa nối cơ sở dữ liệu" };
+
+  const tatCa: UngVienRow[] = [];
+  for (let tu = 0; tu < TOI_DA_XUAT; tu += LO_XUAT) {
+    let q = supabase.from("v_ung_vien").select("*");
+    q = apDungLoc(q, loc);
+    q = q.order("received_at", { ascending: false }).order("code", { ascending: false });
+
+    const { data, error } = await q.range(tu, tu + LO_XUAT - 1);
+    if (error) return { rows: [], cat: false, loi: error.message };
+
+    const lo = (data ?? []) as UngVienRow[];
+    tatCa.push(...lo);
+    if (lo.length < LO_XUAT) return { rows: tatCa, cat: false };
+  }
+  return { rows: tatCa, cat: true };
 }
 
 export async function demCanhBao() {
