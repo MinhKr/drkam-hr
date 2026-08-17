@@ -106,7 +106,7 @@ export function Sidebar() {
 
       <div className="border-t border-[var(--sidebar-border)] px-5 py-3">
         <p className="text-2xs text-[var(--ink-faint)]">
-          Bản nội bộ · Ngày 1
+          Bản nội bộ DrKam · dùng cho nhân sự tuyển dụng
         </p>
       </div>
     </aside>

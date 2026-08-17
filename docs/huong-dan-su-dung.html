@@ -1,0 +1,874 @@
+<title>Sổ tay tuyển dụng DrKam</title>
+
+<style>
+  /* ---------------------------------------------------------------- tokens
+     Màu lấy từ hệ màu thật của app: đỏ #D32027, olive #627D47, cam đất
+     #C05530. Nền trắng lệch ấm ngả đỏ rất nhẹ cho khớp với app.        */
+  :root {
+    --ground: #fbf8f8;
+    --surface: #ffffff;
+    --surface-2: #f4eeee;
+    --ink: #1b1517;
+    --ink-2: #3d3336;
+    --ink-muted: #6e6165;
+    --ink-faint: #9b8d90;
+    --line: #e7dedf;
+    --line-strong: #d5c8ca;
+
+    --accent: #d32027;
+    --accent-deep: #8e1017;
+    --accent-soft: #fbeced;
+
+    --olive: #4f6739;
+    --olive-soft: #eef2e8;
+    --earth: #a8431f;
+    --earth-soft: #fbeee7;
+    --danger: #b20000;
+    --danger-soft: #fdeaea;
+
+    --sans: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+    --mono: Consolas, "SF Mono", ui-monospace, "Cascadia Mono", monospace;
+
+    --wrap: 68ch;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #151112;
+      --surface: #1e1819;
+      --surface-2: #272021;
+      --ink: #f3eced;
+      --ink-2: #ded4d6;
+      --ink-muted: #a79a9d;
+      --ink-faint: #7d7175;
+      --line: #322a2c;
+      --line-strong: #453a3c;
+
+      --accent: #f26a6f;
+      --accent-deep: #f9a1a4;
+      --accent-soft: #2e1c1e;
+
+      --olive: #a3c081;
+      --olive-soft: #1f2619;
+      --earth: #e39066;
+      --earth-soft: #2d1d15;
+      --danger: #ff8080;
+      --danger-soft: #301618;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ground: #151112;
+    --surface: #1e1819;
+    --surface-2: #272021;
+    --ink: #f3eced;
+    --ink-2: #ded4d6;
+    --ink-muted: #a79a9d;
+    --ink-faint: #7d7175;
+    --line: #322a2c;
+    --line-strong: #453a3c;
+
+    --accent: #f26a6f;
+    --accent-deep: #f9a1a4;
+    --accent-soft: #2e1c1e;
+
+    --olive: #a3c081;
+    --olive-soft: #1f2619;
+    --earth: #e39066;
+    --earth-soft: #2d1d15;
+    --danger: #ff8080;
+    --danger-soft: #301618;
+  }
+
+  /* ----------------------------------------------------------------- base */
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink-2);
+    font-family: var(--sans);
+    font-size: 16.5px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 24px 96px;
+  }
+
+  @media (min-width: 1040px) {
+    .page {
+      grid-template-columns: 232px minmax(0, 1fr);
+      gap: 56px;
+      padding: 0 32px 120px;
+    }
+  }
+
+  /* ----------------------------------------------------------------- head */
+  .mo-dau {
+    grid-column: 1 / -1;
+    padding: 64px 0 40px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 48px;
+  }
+
+  .nhan-tren {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 14px;
+  }
+
+  h1 {
+    font-size: clamp(2.1rem, 5vw, 3.1rem);
+    line-height: 1.06;
+    letter-spacing: -0.028em;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 0 0 16px;
+    text-wrap: balance;
+  }
+
+  .dat-van-de {
+    max-width: var(--wrap);
+    font-size: 1.08rem;
+    color: var(--ink-muted);
+    margin: 0;
+  }
+
+  .dat-van-de strong { color: var(--ink-2); font-weight: 600; }
+
+  /* ------------------------------------------------------------------ toc */
+  .muc-luc { display: none; }
+
+  @media (min-width: 1040px) {
+    .muc-luc {
+      display: block;
+      align-self: start;
+      position: sticky;
+      top: 32px;
+    }
+  }
+
+  .muc-luc p {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin: 0 0 14px;
+  }
+
+  .muc-luc ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    counter-reset: tv;
+  }
+
+  .muc-luc a {
+    counter-increment: tv;
+    display: grid;
+    grid-template-columns: 22px 1fr;
+    gap: 8px;
+    padding: 5px 8px 5px 4px;
+    border-radius: 5px;
+    font-size: 14.5px;
+    color: var(--ink-muted);
+    text-decoration: none;
+    border-left: 2px solid transparent;
+  }
+
+  .muc-luc a::before {
+    content: counter(tv);
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--ink-faint);
+    text-align: right;
+    padding-top: 3px;
+  }
+
+  .muc-luc a:hover {
+    color: var(--ink);
+    background: var(--surface-2);
+  }
+
+  .muc-luc a:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+  }
+
+  /* ---------------------------------------------------------------- prose */
+  main { min-width: 0; }
+
+  section {
+    scroll-margin-top: 24px;
+    margin-bottom: 64px;
+  }
+
+  .so-phan {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  h2 {
+    font-size: clamp(1.45rem, 3vw, 1.85rem);
+    line-height: 1.18;
+    letter-spacing: -0.02em;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 0 0 8px;
+    text-wrap: balance;
+  }
+
+  h3 {
+    font-size: 1.06rem;
+    font-weight: 650;
+    color: var(--ink);
+    letter-spacing: -0.008em;
+    margin: 34px 0 10px;
+  }
+
+  p, ul, ol { max-width: var(--wrap); }
+  p { margin: 0 0 14px; }
+
+  main ul { padding-left: 20px; margin: 0 0 16px; }
+  main ul li { margin-bottom: 7px; }
+
+  a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+
+  strong { color: var(--ink); font-weight: 650; }
+
+  /* tên nút, tên màn hình, tên cột — giọng thứ hai của tài liệu */
+  .ui {
+    font-family: var(--mono);
+    font-size: 0.88em;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 1px 5px;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+
+  /* --------------------------------------------------------------- steps */
+  .cac-buoc {
+    list-style: none;
+    counter-reset: b;
+    padding: 0;
+    margin: 0 0 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    max-width: var(--wrap);
+  }
+
+  .cac-buoc > li {
+    counter-increment: b;
+    display: grid;
+    grid-template-columns: 26px 1fr;
+    gap: 12px;
+  }
+
+  .cac-buoc > li::before {
+    content: counter(b);
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent);
+    background: var(--accent-soft);
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: grid;
+    place-items: center;
+    margin-top: 2px;
+  }
+
+  .cac-buoc > li > *:first-child { margin-top: 0; }
+  .cac-buoc > li > *:last-child { margin-bottom: 0; }
+
+  /* -------------------------------------------------------------- callout */
+  .luu-y {
+    max-width: var(--wrap);
+    border-left: 3px solid var(--line-strong);
+    background: var(--surface);
+    border-radius: 0 6px 6px 0;
+    padding: 14px 18px;
+    margin: 0 0 18px;
+  }
+
+  .luu-y > *:first-child { margin-top: 0; }
+  .luu-y > *:last-child { margin-bottom: 0; }
+
+  .luu-y b {
+    display: block;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+
+  .luu-y.meo { border-left-color: var(--olive); background: var(--olive-soft); }
+  .luu-y.meo b { color: var(--olive); }
+  .luu-y.can-than { border-left-color: var(--earth); background: var(--earth-soft); }
+  .luu-y.can-than b { color: var(--earth); }
+  .luu-y.dung-lam { border-left-color: var(--danger); background: var(--danger-soft); }
+  .luu-y.dung-lam b { color: var(--danger); }
+
+  /* --------------------------------------------------------------- tables */
+  .bang-cuon {
+    overflow-x: auto;
+    margin: 0 0 20px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--surface);
+  }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 15px;
+    min-width: 520px;
+  }
+
+  th, td {
+    text-align: left;
+    padding: 11px 16px;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+  }
+
+  th {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    font-weight: 600;
+    background: var(--surface-2);
+    white-space: nowrap;
+  }
+
+  tbody tr:last-child td { border-bottom: 0; }
+  td.gon { white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+  /* --------------------------------------------------------------- footer */
+  footer {
+    grid-column: 1 / -1;
+    border-top: 1px solid var(--line);
+    padding-top: 24px;
+    font-size: 14px;
+    color: var(--ink-faint);
+    max-width: var(--wrap);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
+  }
+</style>
+
+<div class="page">
+  <header class="mo-dau">
+    <p class="nhan-tren">DrKam · Nhân sự tuyển dụng</p>
+    <h1>Sổ tay tuyển dụng DrKam</h1>
+    <p class="dat-van-de">
+      App này thay cho file Google Sheet <strong>DATA UV DRKAM</strong>. Mọi hồ sơ ứng viên, lịch
+      phỏng vấn và checklist onboard nằm chung một chỗ, và app tự làm giúp bạn phần lớn việc đổi
+      trạng thái. Sổ tay đi theo đúng đường một hồ sơ đi qua, từ lúc nhận CV tới lúc hết thử việc —
+      đọc một lượt mất khoảng 10 phút.
+    </p>
+  </header>
+
+  <nav class="muc-luc" aria-label="Mục lục">
+    <p>Mục lục</p>
+    <ol>
+      <li><a href="#dang-nhap">Đăng nhập</a></li>
+      <li><a href="#tong-quan">Tổng quan</a></li>
+      <li><a href="#nhan-cv">Nhận CV mới</a></li>
+      <li><a href="#sang-loc">Sàng lọc</a></li>
+      <li><a href="#phong-van">Phỏng vấn</a></li>
+      <li><a href="#onboard">Onboard &amp; thử việc</a></li>
+      <li><a href="#xuat-excel">Xuất Excel</a></li>
+      <li><a href="#tu-dong">App tự làm gì</a></li>
+      <li><a href="#gap-loi">Gặp lỗi thì làm gì</a></li>
+      <li><a href="#chua-co">App chưa làm được gì</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <!-- 1 -->
+    <section id="dang-nhap">
+      <span class="so-phan">01</span>
+      <h2>Đăng nhập</h2>
+      <p>
+        Mỗi người một tài khoản riêng bằng <strong>email và mật khẩu</strong>. App không có chỗ tự
+        đăng ký — tài khoản do người phụ trách kỹ thuật tạo rồi gửi cho bạn.
+      </p>
+      <ol class="cac-buoc">
+        <li><p>Mở địa chỉ app, trang đăng nhập hiện ra.</p></li>
+        <li><p>Nhập email và mật khẩu được cấp, bấm <span class="ui">Đăng nhập</span>.</p></li>
+        <li>
+          <p>
+            Vào rồi, góc phải trên hiện email của bạn. Cạnh đó là nút đổi
+            <span class="ui">nền sáng / tối</span> và nút <span class="ui">Đăng xuất</span>.
+          </p>
+        </li>
+      </ol>
+      <div class="luu-y meo">
+        <b>Mẹo</b>
+        <p>
+          Bấm vào link nào mà chưa đăng nhập thì app nhớ chỗ đó, đăng nhập xong nó đưa bạn về đúng
+          trang đang định vào.
+        </p>
+      </div>
+      <h3>Ba câu báo lỗi hay gặp</h3>
+      <div class="bang-cuon">
+        <table>
+          <thead>
+            <tr><th>App báo</th><th>Nghĩa là</th><th>Làm gì</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Email hoặc mật khẩu không đúng</td>
+              <td>Sai một trong hai</td>
+              <td>Gõ lại, chú ý phím Caps Lock và dấu cách cuối email</td>
+            </tr>
+            <tr>
+              <td>Tài khoản này chưa được xác nhận</td>
+              <td>Tài khoản mới tạo nhưng chưa bật xác nhận</td>
+              <td>Nhờ người phụ trách kỹ thuật bật <span class="ui">Auto Confirm</span></td>
+            </tr>
+            <tr>
+              <td>Thử quá nhiều lần</td>
+              <td>Sai mật khẩu nhiều lần liên tiếp</td>
+              <td>Đợi vài phút rồi thử lại</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        Quên mật khẩu thì không tự lấy lại được — nhờ người phụ trách kỹ thuật đặt lại giúp.
+      </p>
+    </section>
+
+    <!-- 2 -->
+    <section id="tong-quan">
+      <span class="so-phan">02</span>
+      <h2>Tổng quan — vào việc từ đâu</h2>
+      <p>
+        Trang đầu tiên có 4 ô số. <strong>Bấm được cả 4</strong>, mỗi ô đưa sang đúng danh sách đã
+        lọc sẵn, nên đây là chỗ nhanh nhất để biết hôm nay còn tồn gì.
+      </p>
+      <div class="bang-cuon">
+        <table>
+          <thead>
+            <tr><th>Ô số</th><th>Đếm cái gì</th><th>Bấm vào thì</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Ứng viên</td>
+              <td>Tổng hồ sơ trong hệ thống</td>
+              <td>Mở Quản lý CV, không lọc gì</td>
+            </tr>
+            <tr>
+              <td>Lịch phỏng vấn sắp tới</td>
+              <td>Ca phỏng vấn từ hôm nay trở đi</td>
+              <td>Mở Lịch phỏng vấn</td>
+            </tr>
+            <tr>
+              <td>Đang onboard</td>
+              <td>Nhân sự đang trong thời gian thử việc</td>
+              <td>Mở Onboard &amp; thử việc</td>
+            </tr>
+            <tr>
+              <td>Quá 7 ngày chưa phản hồi</td>
+              <td>Hồ sơ nhận trên 7 ngày mà vẫn chưa liên hệ được</td>
+              <td>Mở Quản lý CV, lọc sẵn đúng nhóm đó</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        Bên dưới là thẻ <span class="ui">Một hồ sơ đi qua 4 bước</span> — bấm từng bước để sang màn
+        hình tương ứng. Menu bên trái luôn có đủ 6 màn hình.
+      </p>
+      <div class="luu-y can-than">
+        <b>Cần biết</b>
+        <p>
+          App dựng cho <strong>máy tính</strong>. Mở trên điện thoại vẫn xem được nhưng menu bên
+          trái ẩn đi và bảng biểu phải cuộn ngang, nhập liệu sẽ khó. Bản dành riêng cho điện thoại
+          chưa làm.
+        </p>
+      </div>
+    </section>
+
+    <!-- 3 -->
+    <section id="nhan-cv">
+      <span class="so-phan">03</span>
+      <h2>Nhận CV mới</h2>
+      <p>
+        Vào <span class="ui">Quản lý CV</span> → bấm <span class="ui">Thêm ứng viên</span>. Hộp thoại
+        có hai thẻ: <span class="ui">Hồ sơ</span> và <span class="ui">Lịch phỏng vấn</span>. Nhập
+        xong thẻ Hồ sơ, bấm <span class="ui">Lưu thay đổi</span>.
+      </p>
+      <h3>Bốn việc app tự làm khi bạn đang gõ</h3>
+      <ol class="cac-buoc">
+        <li>
+          <p>
+            <strong>Chọn vị trí ứng tuyển → tự điền phòng ban và cấp bậc.</strong> Sửa lại được nếu
+            trường hợp đó khác thường.
+          </p>
+        </li>
+        <li>
+          <p>
+            <strong>Gõ số điện thoại hoặc email → tự dò hồ sơ trùng.</strong> Có người trùng thì app
+            hiện cảnh báo kèm tên, nhưng <em>vẫn cho lưu</em> — quyền quyết định là của bạn, vì cùng
+            một người ứng tuyển lại sau vài tháng là chuyện bình thường.
+          </p>
+        </li>
+        <li>
+          <p>
+            <strong>Số điện thoại tự chuẩn hoá.</strong> Gõ có dấu cách, dấu chấm hay
+            <span class="ui">+84</span> đều được, app tự bỏ ký tự lạ để về sau tìm kiếm khớp.
+          </p>
+        </li>
+        <li>
+          <p>
+            <strong>Ngày nhận CV → sinh năm, tháng và mã số hồ sơ.</strong> Không phải tự đánh số.
+          </p>
+        </li>
+      </ol>
+      <div class="luu-y meo">
+        <b>Mẹo</b>
+        <p>
+          Chưa biết vị trí hay chưa có email thì cứ để trống, chỉ <strong>họ tên</strong> là bắt
+          buộc. Bổ sung sau bằng cách bấm vào dòng đó trong danh sách.
+        </p>
+      </div>
+    </section>
+
+    <!-- 4 -->
+    <section id="sang-loc">
+      <span class="so-phan">04</span>
+      <h2>Sàng lọc — tìm và lọc hồ sơ</h2>
+      <p>
+        Màn hình <span class="ui">Quản lý CV</span> có 4 ô đếm ở trên, dùng như 4 phím lọc nhanh:
+        <span class="ui">Tất cả ứng viên</span>, <span class="ui">Chưa sàng lọc</span>,
+        <span class="ui">Chưa đặt lịch PV</span>, <span class="ui">Quá 7 ngày chưa phản hồi</span>.
+        Bấm lần nữa vào ô đang chọn để bỏ lọc.
+      </p>
+      <h3>Thanh bộ lọc</h3>
+      <ul>
+        <li>
+          <strong>Ô tìm kiếm — gõ không dấu cũng ra.</strong> Tìm <span class="ui">nguyen van a</span>
+          vẫn thấy “Nguyễn Văn Ánh”. Tìm được cả theo email và số điện thoại.
+        </li>
+        <li>
+          <strong>6 ô chọn:</strong> Vị trí, Trạng thái, Nguồn CV, Phòng ban, Người sàng lọc, Khu vực.
+          Chọn nhiều ô cùng lúc thì các điều kiện cộng dồn.
+        </li>
+        <li><strong>Khoảng ngày</strong> — lọc theo ngày nhận CV, từ ngày → đến ngày.</li>
+        <li>
+          <span class="ui">Đặt lại</span> xoá hết bộ lọc. Nút này chỉ hiện khi đang lọc.
+        </li>
+      </ul>
+      <p>
+        Danh sách hiện <strong>25 dòng mỗi trang</strong>, phân trang ở cuối. Bấm vào một dòng để mở
+        hồ sơ đầy đủ.
+      </p>
+      <h3>Đổi trạng thái nhanh cho nhiều hồ sơ</h3>
+      <p>
+        Vào <span class="ui">Bảng giai đoạn</span>: 5 cột theo phễu tuyển dụng —
+        <span class="ui">Mới về</span>, <span class="ui">Phỏng vấn</span>,
+        <span class="ui">Chờ quyết định</span>, <span class="ui">Nhận việc</span>,
+        <span class="ui">Dừng</span>. <strong>Kéo thẻ sang cột khác là đổi trạng thái</strong>, lưu
+        ngay. Bấm vào thẻ thì mở hồ sơ như bình thường.
+      </p>
+      <div class="luu-y can-than">
+        <b>Vì sao chỉ có một cột Phỏng vấn</b>
+        <p>
+          App có 13 trạng thái CV, gom vào 5 cột — nên <strong>một cột chứa nhiều trạng thái</strong>.
+          Cột Phỏng vấn chứa cả vòng 1 và vòng 2; muốn biết từng người đang ở vòng nào thì xem
+          <strong>nhãn trên thẻ</strong>: <span class="ui">Vòng 1</span>,
+          <span class="ui">Vòng 2</span>, <span class="ui">Vòng 1 đạt</span>.
+        </p>
+        <p>
+          Kéo thẻ vào cột Phỏng vấn thì app đặt <em>Phỏng vấn vòng 1</em> — riêng người
+          <strong>đã đạt vòng 1</strong> thì đặt <em>Phỏng vấn vòng 2</em>, không tụt họ lại vòng 1.
+          Cần đúng một trạng thái cụ thể nào khác thì mở hồ sơ rồi chọn trong ô
+          <span class="ui">Trạng thái CV</span>, đừng dùng kéo thả.
+        </p>
+      </div>
+    </section>
+
+    <!-- 5 -->
+    <section id="phong-van">
+      <span class="so-phan">05</span>
+      <h2>Phỏng vấn</h2>
+      <p>
+        Đặt lịch được ở hai chỗ, tuỳ bạn đang làm gì:
+      </p>
+      <ul>
+        <li>
+          <strong>Trong hồ sơ ứng viên</strong> — mở hồ sơ, sang thẻ
+          <span class="ui">Lịch phỏng vấn</span>. Tiện khi vừa xem CV vừa xếp lịch.
+        </li>
+        <li>
+          <strong>Màn hình Lịch phỏng vấn</strong> — xem cả tuần, tiện khi xếp nhiều ca một lượt.
+        </li>
+      </ul>
+      <p>
+        Mỗi ứng viên có tối đa <strong>2 vòng</strong>. Điền ngày, giờ, hình thức, người phỏng vấn
+        rồi lưu.
+      </p>
+      <div class="luu-y can-than">
+        <b>Cần biết</b>
+        <p>
+          <strong>Phải lưu lịch trước, mới nhập được kết quả.</strong> Ô Kết quả chỉ mở sau khi ca
+          phỏng vấn đã có ngày giờ.
+        </p>
+      </div>
+      <h3>Lịch tuần</h3>
+      <p>
+        Lưới 30 phút, từ 8:00 đến 18:30. <strong>Kéo thẻ sang ô khác là đổi ngày giờ</strong> — không
+        phải mở hộp thoại. Ca lẻ giờ như 9:50 được dồn về ô 30 phút gần nhất phía trước để vẫn thấy
+        trên lưới.
+      </p>
+      <h3>Cảnh báo trùng lịch người phỏng vấn</h3>
+      <p>
+        App tự cảnh báo khi <strong>cùng một người phỏng vấn bị xếp hai ca cùng ngày cách nhau dưới
+        45 phút</strong>. Đây là cảnh báo, không phải chặn — bạn vẫn lưu được nếu biết chắc là ổn.
+      </p>
+      <h3>Nhập kết quả</h3>
+      <p>
+        Ở màn hình Lịch phỏng vấn, danh sách tách riêng vòng 1 và vòng 2, nhập kết quả ngay tại dòng:
+        <span class="ui">Đạt</span>, <span class="ui">Không đạt</span>,
+        <span class="ui">Back up</span>. Có thêm ô <span class="ui">Đã báo KQ</span> để đánh dấu đã
+        trả kết quả cho ứng viên qua mail — app <em>không</em> tự gửi mail, ô này chỉ để bạn nhớ.
+      </p>
+      <div class="luu-y meo">
+        <b>Mẹo</b>
+        <p>
+          Nhập kết quả xong <strong>không cần tự đổi trạng thái hồ sơ</strong> — app đổi giúp. Xem
+          bảng ở phần <a href="#tu-dong">App tự làm gì</a>.
+        </p>
+      </div>
+    </section>
+
+    <!-- 6 -->
+    <section id="onboard">
+      <span class="so-phan">06</span>
+      <h2>Onboard &amp; thử việc</h2>
+      <p>
+        Phỏng vấn vòng 2 <span class="ui">Đạt</span> là app <strong>tự tạo hồ sơ onboard</strong>,
+        bạn không phải thêm tay. Nếu vì lý do nào đó hồ sơ chưa có, đầu màn hình sẽ hiện dòng
+        “Có N ứng viên đã nhận việc nhưng chưa có hồ sơ onboard” kèm ô chọn và nút
+        <span class="ui">Thêm vào onboard</span>.
+      </p>
+      <h3>Checklist</h3>
+      <p>
+        17 mục chia 5 nhóm theo giai đoạn. <strong>Tick là lưu ngay</strong>, không có nút Lưu. Cột
+        <span class="ui">Tiến độ checklist</span> ở danh sách cho thấy làm được bao nhiêu phần.
+      </p>
+      <p>Mỗi giai đoạn phân công được người phụ trách riêng, để không ai làm trùng việc.</p>
+      <h3>Ba mốc đánh giá thử việc</h3>
+      <p>
+        Điền <span class="ui">Ngày onboard</span> là app tự tính ba mốc:
+        <strong>Sau 7 ngày</strong>, <strong>Sau 1 tháng</strong>, <strong>Sau 2 tháng</strong>.
+      </p>
+      <ul>
+        <li>Mốc <strong>đến hạn hôm nay hoặc đã quá hạn</strong> được đẩy lên đầu danh sách và tô đỏ.</li>
+        <li>
+          Mỗi mốc nhập <span class="ui">Đạt</span> hoặc <span class="ui">Không đạt</span>; trạng thái
+          vòng đời của nhân sự tự đổi theo.
+        </li>
+      </ul>
+      <div class="luu-y meo">
+        <b>Mẹo</b>
+        <p>
+          Mở màn hình này mỗi sáng: việc gì tới hạn nằm sẵn trên đầu, không phải tự nhớ ngày.
+        </p>
+      </div>
+    </section>
+
+    <!-- 7 -->
+    <section id="xuat-excel">
+      <span class="so-phan">07</span>
+      <h2>Xuất Excel</h2>
+      <p>
+        Ở <span class="ui">Quản lý CV</span>, nút <span class="ui">Xuất Excel</span> nằm trong thanh
+        bộ lọc, kèm số dòng sẽ xuất.
+      </p>
+      <div class="luu-y">
+        <b>Nguyên tắc</b>
+        <p>
+          File tải về <strong>khớp đúng bộ lọc đang chọn</strong>, và xuất <strong>hết</strong> —
+          không phải chỉ 25 dòng đang thấy trên trang. Muốn xuất riêng một nhóm thì lọc trước rồi
+          mới bấm xuất.
+        </p>
+      </div>
+      <p>File <span class="ui">.xlsx</span> gồm 29 cột, tên cột đặt như sheet Data cũ. Trong file:</p>
+      <ul>
+        <li><strong>Số điện thoại giữ nguyên số 0 đầu</strong> — không bị Excel cắt thành 912…</li>
+        <li>Ngày là ô ngày thật, lọc và sắp xếp theo ngày được trong Excel.</li>
+        <li>Dòng tiêu đề đứng yên khi cuộn, và có sẵn bộ lọc của Excel.</li>
+      </ul>
+    </section>
+
+    <!-- 8 -->
+    <section id="tu-dong">
+      <span class="so-phan">08</span>
+      <h2>App tự làm gì</h2>
+      <p>
+        Phần này giải thích những lúc bạn thấy trạng thái tự đổi mà không ai sửa. Đó là app làm, và
+        đây là toàn bộ quy tắc:
+      </p>
+      <div class="bang-cuon">
+        <table>
+          <thead>
+            <tr><th>Khi bạn làm</th><th>App tự làm</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Đặt lịch phỏng vấn vòng 1</td>
+              <td>Trạng thái hồ sơ → <em>Phỏng vấn vòng 1</em></td>
+            </tr>
+            <tr>
+              <td>Đặt lịch phỏng vấn vòng 2</td>
+              <td>Trạng thái hồ sơ → <em>Phỏng vấn vòng 2</em></td>
+            </tr>
+            <tr>
+              <td>Nhập kết quả PV1 = Đạt</td>
+              <td>Trạng thái → <em>PV đạt - vòng 1</em></td>
+            </tr>
+            <tr>
+              <td>Nhập kết quả PV2 = Đạt</td>
+              <td>Trạng thái → <em>Chờ nhận việc</em>, <strong>và tạo sẵn hồ sơ onboard</strong></td>
+            </tr>
+            <tr>
+              <td>Nhập kết quả = Không đạt (vòng nào cũng vậy)</td>
+              <td>Trạng thái → <em>Phỏng vấn - loại</em></td>
+            </tr>
+            <tr>
+              <td>Nhập kết quả = Back up</td>
+              <td>Trạng thái → <em>PV đạt - backup</em></td>
+            </tr>
+            <tr>
+              <td>Điền ngày onboard</td>
+              <td>Tính ba mốc đánh giá 7 ngày / 1 tháng / 2 tháng</td>
+            </tr>
+            <tr>
+              <td>Sửa bất cứ thứ gì</td>
+              <td>Ghi vào nhật ký: ai sửa, sửa lúc nào, từ giá trị nào sang giá trị nào</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="luu-y can-than">
+        <b>Cần biết</b>
+        <p>
+          Mọi người đăng nhập đều <strong>xem và sửa được toàn bộ hồ sơ</strong>, kể cả số điện thoại
+          và email ứng viên. Bù lại app ghi nhật ký mọi thay đổi. Đây là lựa chọn có chủ ý cho nhóm
+          nhỏ; muốn siết theo phòng ban thì làm thêm được, không phải dựng lại.
+        </p>
+      </div>
+    </section>
+
+    <!-- 9 -->
+    <section id="gap-loi">
+      <span class="so-phan">09</span>
+      <h2>Gặp lỗi thì làm gì</h2>
+      <div class="bang-cuon">
+        <table>
+          <thead>
+            <tr><th>Hiện tượng</th><th>Vì sao</th><th>Cách xử lý</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Ô chọn nào cũng trống, không chọn được vị trí</td>
+              <td>App không đọc được danh mục</td>
+              <td>Tải lại trang. Vẫn vậy thì báo người phụ trách kỹ thuật</td>
+            </tr>
+            <tr>
+              <td>Báo “Không đọc được danh sách”</td>
+              <td>Mất kết nối cơ sở dữ liệu</td>
+              <td>Kiểm tra mạng, tải lại. Vẫn vậy thì báo kỹ thuật</td>
+            </tr>
+            <tr>
+              <td>Trang Onboard trắng hoặc báo thiếu view</td>
+              <td>Thiếu một bước cài đặt cơ sở dữ liệu</td>
+              <td>Báo kỹ thuật — chạy file <span class="ui">0006</span> là xong</td>
+            </tr>
+            <tr>
+              <td>Nhãn <span class="ui">Xem trước</span> ở góc phải trên</td>
+              <td>App đang chạy không nối cơ sở dữ liệu</td>
+              <td>Đừng nhập gì, sẽ không lưu được. Báo kỹ thuật ngay</td>
+            </tr>
+            <tr>
+              <td>Sửa xong nhưng không thấy đổi</td>
+              <td>Trang đang giữ dữ liệu cũ</td>
+              <td>Tải lại trang bằng <span class="ui">Ctrl + R</span></td>
+            </tr>
+            <tr>
+              <td>Ô Kết quả phỏng vấn bị khoá</td>
+              <td>Ca đó chưa có ngày giờ</td>
+              <td>Lưu lịch trước, rồi mới nhập kết quả</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="luu-y dung-lam">
+        <b>Đừng làm</b>
+        <p>
+          Đừng nhập liệu khi thấy nhãn <span class="ui">Xem trước</span>, và đừng xoá hồ sơ để “làm
+          lại cho sạch” — xoá hồ sơ là xoá luôn lịch phỏng vấn và hồ sơ onboard gắn với người đó,
+          không lấy lại được. Nhập sai thì sửa, đừng xoá.
+        </p>
+      </div>
+    </section>
+
+    <!-- 10 -->
+    <section id="chua-co">
+      <span class="so-phan">10</span>
+      <h2>App chưa làm được gì</h2>
+      <p>Nói trước để bạn không mất thời gian đi tìm:</p>
+      <ul>
+        <li><strong>Không tự gửi email</strong> cho ứng viên. Ô <span class="ui">Đã báo KQ</span> chỉ để đánh dấu.</li>
+        <li><strong>Không đồng bộ Google Calendar.</strong> Lịch phỏng vấn chỉ nằm trong app.</li>
+        <li><strong>Không đọc file CV PDF.</strong> Chỉ lưu được đường link CV, phải tự gõ thông tin.</li>
+        <li><strong>Không nhập hàng loạt từ Excel.</strong> Thêm từng hồ sơ một.</li>
+        <li>
+          <strong>Màn hình Danh mục chỉ để xem.</strong> Cần thêm vị trí, nguồn CV hay người phỏng
+          vấn mới thì nhờ người phụ trách kỹ thuật thêm giúp.
+        </li>
+        <li><strong>Chưa có giao diện riêng cho điện thoại.</strong></li>
+      </ul>
+      <p>
+        Những phần này không phải làm không được — chỉ là để sau, cho kịp bản dùng thật. Cần cái nào
+        thì nói để xếp thứ tự.
+      </p>
+    </section>
+  </main>
+
+  <footer>
+    Sổ tay dùng cho bản nội bộ DrKam · viết ngày 17.08.2026. App thay cho file
+    <em>DATA UV DRKAM 2026</em>. Có chỗ nào trong app không khớp với sổ tay này thì tin app và báo
+    lại để sửa sổ tay.
+  </footer>
+</div>

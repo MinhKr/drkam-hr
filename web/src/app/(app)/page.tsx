@@ -1,19 +1,35 @@
 import Link from "next/link";
 import { ArrowRight, CalendarDays, ClipboardCheck, Database, Users } from "lucide-react";
 import { Badge, Card, CardBody, CardHeader, CardTitle } from "@/components/ui/primitives";
-import { layDanhMuc } from "@/lib/danh-muc";
+import { NHAN_LOAI_DANH_MUC, layDanhMuc } from "@/lib/danh-muc";
 import { daNoiSupabase } from "@/lib/supabase/config";
 import { taoSupabaseServer } from "@/lib/supabase/server";
 import { demCanhBao } from "@/lib/ung-vien";
 
 export const metadata = { title: "Tổng quan" };
 
-const LO_TRINH = [
-  { ngay: "Ngày 1 · 14.08", viec: "Nền tảng, cơ sở dữ liệu, danh mục, đăng nhập", xong: true },
-  { ngay: "Ngày 2 · 15.08", viec: "Quản lý CV: danh sách, hồ sơ, chặn trùng, tự động hoá", xong: true },
-  { ngay: "Ngày 3 · 16.08", viec: "Lịch phỏng vấn, lịch tuần kéo thả, bảng giai đoạn", xong: true },
-  { ngay: "Ngày 4 · 17.08", viec: "Onboard, thử việc, nhập hàng loạt, xuất Excel", xong: false },
-  { ngay: "Ngày 5 · 18.08", viec: "Import dữ liệu cũ, bàn giao, go-live", xong: false },
+/** Quy trình một hồ sơ đi qua, hiện ở trang Tổng quan cho người mới dùng */
+const QUY_TRINH = [
+  {
+    buoc: "Nhận CV",
+    viec: "Thêm ứng viên mới, hệ thống tự dò trùng theo số điện thoại và email",
+    href: "/ung-vien",
+  },
+  {
+    buoc: "Sàng lọc",
+    viec: "Ghi người sàng lọc và kết quả, đổi trạng thái hồ sơ",
+    href: "/ung-vien?canh_bao=chua_sang_loc",
+  },
+  {
+    buoc: "Phỏng vấn",
+    viec: "Đặt lịch vòng 1 và vòng 2, nhập kết quả ngay trên danh sách",
+    href: "/lich-phong-van",
+  },
+  {
+    buoc: "Nhận việc",
+    viec: "PV vòng 2 đạt là tự sinh dòng onboard, theo checklist và 3 mốc thử việc",
+    href: "/onboard",
+  },
 ];
 
 export default async function TrangTongQuan() {
@@ -63,7 +79,7 @@ export default async function TrangTongQuan() {
     {
       nhan: "Đang onboard",
       so: soOnboard,
-      ghiChu: "Checklist làm ở ngày 4",
+      ghiChu: soOnboard > 0 ? "đang theo dõi thử việc" : "chưa có ai nhận việc",
       Icon: ClipboardCheck,
       href: "/onboard",
     },
@@ -118,43 +134,37 @@ export default async function TrangTongQuan() {
       <div className="grid gap-4 lg:grid-cols-[1.15fr_1fr]">
         <Card>
           <CardHeader>
-            <CardTitle>Lộ trình 5 ngày</CardTitle>
-            <Badge tone="primary">Đang ở ngày 4</Badge>
+            <CardTitle>Một hồ sơ đi qua 4 bước</CardTitle>
           </CardHeader>
           <CardBody className="flex flex-col gap-0">
-            {LO_TRINH.map((m, i) => (
-              <div
-                key={m.ngay}
-                className="flex items-start gap-3 border-t border-[var(--line)] py-3 first:border-t-0 first:pt-0"
+            {QUY_TRINH.map((m, i) => (
+              <Link
+                key={m.buoc}
+                href={m.href}
+                className="group flex items-start gap-3 border-t border-[var(--line)] py-3 first:border-t-0 first:pt-0"
               >
-                <span
-                  className={
-                    m.xong
-                      ? "mt-1 grid size-5 shrink-0 place-items-center rounded-full bg-[var(--success)] text-[10px] font-bold text-white"
-                      : "mt-1 grid size-5 shrink-0 place-items-center rounded-full border border-[var(--line-strong)] text-[10px] font-semibold text-[var(--ink-faint)]"
-                  }
-                >
-                  {m.xong ? "✓" : i + 1}
+                <span className="mt-0.5 grid size-5 shrink-0 place-items-center rounded-full bg-[var(--primary-soft)] text-[10px] font-bold text-[var(--primary-soft-fg)]">
+                  {i + 1}
                 </span>
                 <div className="flex flex-col">
-                  <span className="text-sm font-semibold text-[var(--ink)]">
-                    {m.ngay}
+                  <span className="text-sm font-semibold text-[var(--ink)] group-hover:text-[var(--primary)]">
+                    {m.buoc}
                   </span>
                   <span className="text-sm text-[var(--ink-muted)]">{m.viec}</span>
                 </div>
-              </div>
+              </Link>
             ))}
           </CardBody>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardTitle>Danh mục đã nạp từ Excel</CardTitle>
+            <CardTitle>Danh mục dùng chung</CardTitle>
             <Link
               href="/danh-muc"
               className="flex items-center gap-1 text-sm font-medium text-[var(--primary)] hover:underline"
             >
-              Xem tất cả <ArrowRight className="size-3.5" />
+              Sửa danh mục <ArrowRight className="size-3.5" />
             </Link>
           </CardHeader>
           <CardBody>
@@ -164,14 +174,15 @@ export default async function TrangTongQuan() {
                 .slice(0, 12)
                 .map(([loai, so]) => (
                   <Badge key={loai} tone="outline" className="tabular">
-                    {loai} · {so}
+                    {NHAN_LOAI_DANH_MUC[loai] ?? loai} · {so}
                   </Badge>
                 ))}
             </div>
             <p className="mt-4 text-sm text-[var(--ink-muted)]">
-              Toàn bộ lấy từ <span className="font-medium text-[var(--ink-2)]">DATA UV DRKAM 2026.xlsx</span>,
-              đã gộp các giá trị trùng nghĩa (Face → Facebook, VN Work → Vietnamworks) và sửa
-              những giá trị bị lỗi chuỗi trong danh sách vị trí.
+              Đây là các giá trị cho mọi ô chọn trong app: vị trí ứng tuyển, phòng ban, nguồn CV,
+              trạng thái, người phỏng vấn… Màn hình{" "}
+              <span className="font-medium text-[var(--ink-2)]">Danh mục</span> hiện chỉ để xem;
+              cần thêm giá trị mới thì nhờ người phụ trách kỹ thuật.
             </p>
           </CardBody>
         </Card>

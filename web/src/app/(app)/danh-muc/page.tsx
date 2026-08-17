@@ -42,8 +42,10 @@ export default async function TrangDanhMuc() {
             Danh mục
           </h1>
           <p className="mt-1 max-w-2xl text-base text-[var(--ink-muted)]">
-            Toàn bộ giá trị dùng cho các ô chọn trong app, nạp sẵn từ file Excel. Từ ngày 4 bạn tự
-            thêm, sửa, ẩn được ngay tại đây mà không cần lập trình viên.
+            Toàn bộ giá trị dùng cho các ô chọn trong app, nạp sẵn từ file Excel. Màn hình này
+            hiện <span className="font-medium text-[var(--ink-2)]">chỉ để xem</span> — cần thêm
+            vị trí, nguồn CV hay người phỏng vấn mới thì nhờ người phụ trách kỹ thuật thêm trong
+            Supabase, chưa sửa được trực tiếp ở đây.
           </p>
         </div>
         {nguon === "co_so_du_lieu" ? (
