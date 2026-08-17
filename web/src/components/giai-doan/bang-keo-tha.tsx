@@ -31,6 +31,17 @@ const TRANG_THAI_MAC_DINH: Record<GiaiDoan, string> = {
   dung: "Loại",
 };
 
+/**
+ * Cột Phỏng vấn gom cả vòng 1, vòng 2 và "PV đạt - vòng 1" vào một chỗ.
+ * Không có nhãn này thì cả cột nhìn như một khối, không biết ai đang ở vòng nào.
+ */
+function nhanVong(trangThai: string): string | null {
+  if (trangThai === "Phỏng vấn vòng 1") return "Vòng 1";
+  if (trangThai === "Phỏng vấn vòng 2") return "Vòng 2";
+  if (trangThai === "PV đạt - vòng 1") return "Vòng 1 đạt";
+  return null;
+}
+
 const MAU_COT: Record<GiaiDoan, string> = {
   moi_ve: "border-t-[var(--n-400)]",
   phong_van: "border-t-[var(--primary)]",
@@ -41,6 +52,7 @@ const MAU_COT: Record<GiaiDoan, string> = {
 
 function The({ uv, onMo }: { uv: UngVienRow; onMo: () => void }) {
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({ id: uv.id });
+  const vong = nhanVong(uv.status);
 
   return (
     <div
@@ -77,6 +89,7 @@ function The({ uv, onMo }: { uv: UngVienRow; onMo: () => void }) {
       </div>
 
       <div className="flex flex-wrap items-center gap-1.5">
+        {vong && <Badge tone="primary">{vong}</Badge>}
         {uv.source && <Badge tone="outline">{uv.source}</Badge>}
         {uv.so_lich_pv > 0 && (
           <span className="inline-flex items-center gap-1 text-2xs text-[var(--ink-muted)]">
@@ -192,8 +205,16 @@ export function BangKeoTha({
     );
     if (dangO === cot) return;
 
+    // Kéo về cột Phỏng vấn: người đã đạt vòng 1 thì vào vòng 2, không tụt lại vòng 1.
+    // Hay gặp khi lấy lại một hồ sơ Backup để phỏng vấn tiếp.
+    const uv = (Object.values(theoGiaiDoan).flat() as UngVienRow[]).find((u) => u.id === id);
+    const trangThaiMoi =
+      cot === "phong_van" && uv?.kq_pv1 === "Đạt"
+        ? "Phỏng vấn vòng 2"
+        : TRANG_THAI_MAC_DINH[cot];
+
     batDau(async () => {
-      const kq = await doiTrangThai(id, TRANG_THAI_MAC_DINH[cot]);
+      const kq = await doiTrangThai(id, trangThaiMoi);
       if (kq.ok) router.refresh();
       else setLoi(kq.loi ?? "Không đổi được trạng thái");
     });
@@ -231,10 +252,12 @@ export function BangKeoTha({
         banDoGiaiDoan={banDoGiaiDoan}
       />
 
-      <p className="text-xs text-[var(--ink-faint)]">
-        Kéo thẻ sang cột khác là trạng thái CV đổi theo — cột Phỏng vấn đặt thành “Phỏng vấn vòng
-        1”, cột Nhận việc thành “Chờ nhận việc”, cột Dừng thành “Loại”. Cần trạng thái chi tiết hơn
-        thì mở hồ sơ ở màn hình Quản lý CV.
+      <p className="max-w-4xl text-xs text-[var(--ink-faint)]">
+        Mỗi cột gom nhiều trạng thái CV — cột <b className="font-semibold">Phỏng vấn</b> chứa cả
+        vòng 1 và vòng 2, nhãn trên thẻ cho biết từng người đang ở vòng nào. Kéo thẻ sang cột khác
+        là trạng thái đổi theo: cột Phỏng vấn đặt thành “Phỏng vấn vòng 1”, riêng người đã đạt vòng
+        1 thì thành “Phỏng vấn vòng 2”; cột Nhận việc thành “Chờ nhận việc”; cột Dừng thành “Loại”.
+        Cần đặt trạng thái khác thì mở hồ sơ rồi chọn trong ô Trạng thái CV.
       </p>
     </div>
   );
