@@ -58,6 +58,8 @@ export type UngVien = {
   screener: string | null;
   screening_note: string | null;
   status: string;
+  /** Lúc hồ sơ vào nhóm trạng thái giai đoạn "dừng"; null = chưa dừng. Trigger trong cơ sở dữ liệu tự ghi. */
+  stopped_at: string | null;
   hometown: string | null;
   experience: string | null;
   available_from: string | null;

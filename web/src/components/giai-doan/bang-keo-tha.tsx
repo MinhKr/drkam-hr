@@ -11,12 +11,13 @@ import {
   useSensors,
   type DragEndEvent,
 } from "@dnd-kit/core";
-import { CalendarClock, GripVertical } from "lucide-react";
+import { Archive, CalendarClock, ChevronDown, GripVertical } from "lucide-react";
 import { AvatarChu, Badge } from "@/components/ui/primitives";
 import { HoSoDialog } from "@/components/ung-vien/ho-so-dialog";
 import type { ChonLichPV } from "@/components/ung-vien/dat-lich-pv";
 import type { ChonLua } from "@/components/ung-vien/form-ung-vien";
 import { doiTrangThai } from "@/app/(app)/ung-vien/actions";
+import { NGAY_GIU_O_COT_DUNG } from "@/lib/giai-doan";
 import { GIAI_DOAN, type GiaiDoan } from "@/lib/types";
 import { dinhDangNgay, cn } from "@/lib/utils";
 import type { CaPhongVan } from "@/lib/lich";
@@ -118,12 +119,15 @@ function Cot({
   ten,
   ds,
   tong,
+  ghiChu,
   onMo,
 }: {
   gd: GiaiDoan;
   ten: string;
   ds: UngVienRow[];
   tong: number;
+  /** Dòng chữ nhỏ dưới đáy cột — cột Dừng dùng để chỉ xuống khu lưu trữ */
+  ghiChu?: string;
   onMo: (uv: UngVienRow) => void;
 }) {
   const { setNodeRef, isOver } = useDroppable({ id: gd });
@@ -159,7 +163,107 @@ function Cot({
           </p>
         )}
       </div>
+
+      {ghiChu && (
+        <p className="mt-auto border-t border-[var(--line)] px-1 pt-2 text-2xs text-[var(--ink-faint)]">
+          {ghiChu}
+        </p>
+      )}
     </div>
+  );
+}
+
+
+/**
+ * Một hàng trong khu lưu trữ — gọn hơn thẻ trên bảng vì đây là chỗ tra lại,
+ * không phải chỗ theo dõi hằng ngày. Bấm vào vẫn mở đúng hộp thoại hồ sơ đó.
+ */
+function HangLuuTru({ uv, onMo }: { uv: UngVienRow; onMo: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onMo}
+      className="flex w-full items-center gap-2.5 rounded-[var(--r-sm)] border border-[var(--line)] bg-[var(--surface)] px-2.5 py-2 text-left transition-colors hover:border-[var(--line-strong)] hover:bg-[var(--surface-hover)]"
+      title={`Bấm để mở hồ sơ ${uv.full_name}`}
+    >
+      <AvatarChu ten={uv.full_name} className="size-7 text-2xs" />
+      <span className="flex min-w-0 flex-1 flex-col">
+        <span className="truncate text-sm font-medium text-[var(--ink)]">{uv.full_name}</span>
+        <span className="truncate text-2xs text-[var(--ink-faint)]">
+          {uv.position ?? "—"} · {uv.status}
+        </span>
+      </span>
+      <span
+        className="tabular shrink-0 text-2xs text-[var(--ink-faint)]"
+        title="Ngày dừng hồ sơ"
+      >
+        {dinhDangNgay(uv.stopped_at)}
+      </span>
+    </button>
+  );
+}
+
+
+/**
+ * Khu lưu trữ dưới bảng: nơi hồ sơ ở cột Dừng rơi xuống sau
+ * NGAY_GIU_O_COT_DUNG ngày, để cột Dừng không phình ra vô hạn.
+ *
+ * Mở sẵn cho dễ thấy nhưng khung cuộn riêng, cao tối đa một khoảng cố định —
+ * dù có mấy chục hồ sơ cũng không đẩy bảng giai đoạn lên mất hút.
+ */
+function KhuLuuTru({
+  ds,
+  tong,
+  onMo,
+}: {
+  ds: UngVienRow[];
+  tong: number;
+  onMo: (uv: UngVienRow) => void;
+}) {
+  const [mo, setMo] = useState(true);
+
+  return (
+    <section className="rounded-[var(--card-radius)] border border-[var(--card-border)] bg-[var(--surface-2)]">
+      <button
+        type="button"
+        onClick={() => setMo((v) => !v)}
+        aria-expanded={mo}
+        className="flex w-full items-center gap-2.5 rounded-[var(--card-radius)] px-3 py-2.5 text-left transition-colors hover:bg-[var(--surface-hover)]"
+      >
+        <Archive className="size-4 shrink-0 text-[var(--ink-faint)]" />
+        <span className="text-sm font-semibold text-[var(--ink)]">Đã dừng từ trước</span>
+        <span className="tabular rounded-full bg-[var(--surface)] px-2 py-0.5 text-2xs font-semibold text-[var(--ink-muted)]">
+          {tong}
+        </span>
+        <span className="ml-auto flex shrink-0 items-center gap-1 text-2xs text-[var(--ink-faint)]">
+          {mo ? "Thu gọn" : "Mở ra"}
+          <ChevronDown className={cn("size-3.5 transition-transform", mo && "rotate-180")} />
+        </span>
+      </button>
+
+      {mo && (
+        <div className="border-t border-[var(--line)] p-2.5">
+          {ds.length === 0 ? (
+            <p className="px-1 py-4 text-center text-xs text-[var(--ink-faint)]">
+              Chưa có hồ sơ nào dừng quá {NGAY_GIU_O_COT_DUNG} ngày
+            </p>
+          ) : (
+            <>
+              <div className="grid max-h-[320px] grid-cols-1 gap-2 overflow-y-auto sm:grid-cols-2 xl:grid-cols-3">
+                {ds.map((uv) => (
+                  <HangLuuTru key={uv.id} uv={uv} onMo={() => onMo(uv)} />
+                ))}
+              </div>
+              {tong > ds.length && (
+                <p className="px-1 pt-2.5 text-center text-2xs text-[var(--ink-faint)]">
+                  còn {tong - ds.length} hồ sơ nữa, xem ở màn hình Quản lý CV
+                </p>
+              )}
+            </>
+          )}
+        </div>
+      )}
+    </section>
   );
 }
 
@@ -170,6 +274,8 @@ export function BangKeoTha({
   chonLichPV,
   lichTheoUV,
   banDoGiaiDoan,
+  luuTru,
+  tongLuuTru,
 }: {
   theoGiaiDoan: Record<GiaiDoan, UngVienRow[]>;
   tongTheoGiaiDoan: Record<GiaiDoan, number>;
@@ -177,6 +283,9 @@ export function BangKeoTha({
   chonLichPV: ChonLichPV;
   lichTheoUV: Record<string, CaPhongVan[]>;
   banDoGiaiDoan: Record<string, GiaiDoan>;
+  /** Hồ sơ đã dừng quá hạn, không lên bảng nữa mà nằm ở khu lưu trữ bên dưới */
+  luuTru: UngVienRow[];
+  tongLuuTru: number;
 }) {
   const router = useRouter();
   const [, batDau] = useTransition();
@@ -237,11 +346,18 @@ export function BangKeoTha({
               ten={ten}
               ds={theoGiaiDoan[key] ?? []}
               tong={tongTheoGiaiDoan[key] ?? 0}
+              ghiChu={
+                key === "dung" && tongLuuTru > 0
+                  ? `${tongLuuTru} hồ sơ dừng lâu hơn nằm ở khu lưu trữ bên dưới`
+                  : undefined
+              }
               onMo={moHoSo}
             />
           ))}
         </div>
       </DndContext>
+
+      <KhuLuuTru ds={luuTru} tong={tongLuuTru} onMo={moHoSo} />
 
       <HoSoDialog
         dangMo={dangMo}
@@ -258,6 +374,14 @@ export function BangKeoTha({
         là trạng thái đổi theo: cột Phỏng vấn đặt thành “Phỏng vấn vòng 1”, riêng người đã đạt vòng
         1 thì thành “Phỏng vấn vòng 2”; cột Nhận việc thành “Chờ nhận việc”; cột Dừng thành “Loại”.
         Cần đặt trạng thái khác thì mở hồ sơ rồi chọn trong ô Trạng thái CV.
+      </p>
+
+      <p className="max-w-4xl text-xs text-[var(--ink-faint)]">
+        Cột <b className="font-semibold">Dừng</b> chỉ giữ hồ sơ vừa dừng trong{" "}
+        {NGAY_GIU_O_COT_DUNG} ngày; quá hạn thì tự xuống khu{" "}
+        <b className="font-semibold">Đã dừng từ trước</b> ngay dưới bảng — bấm vào hàng nào cũng mở
+        được hồ sơ như thẻ trên bảng. Muốn gọi lại một ứng viên đã lưu trữ thì mở hồ sơ rồi đổi ô
+        Trạng thái CV sang trạng thái khác, thẻ sẽ quay lại đúng cột của nó.
       </p>
     </div>
   );
