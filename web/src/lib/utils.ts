@@ -57,6 +57,18 @@ export function soNgayTu(d?: string | Date | null) {
   return Math.floor(ms / 86_400_000);
 }
 
+/**
+ * Chuẩn hoá link HR gõ tay để đặt vào thẻ <a>.
+ * Thiếu https:// thì trình duyệt hiểu "topcv.vn/abc" là đường dẫn trong app,
+ * bấm vào là nhảy sang trang 404 của chính mình chứ không ra ngoài.
+ */
+export function linkNgoai(url?: string | null): string | null {
+  const s = url?.trim();
+  if (!s) return null;
+  if (/^(https?:\/\/|mailto:|tel:)/i.test(s)) return s;
+  return `https://${s}`;
+}
+
 /** Chữ cái đầu để làm ảnh đại diện: "Nguyễn Văn A" -> "NA" */
 export function chuVietTat(ten: string) {
   const parts = ten.trim().split(/\s+/).filter(Boolean);

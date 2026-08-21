@@ -112,6 +112,8 @@ Trên project mới thì chưa file nào chạy. **`0001` phải chạy đầu t
 | 3 | `0004_view_ung_vien.sql` | View `v_ung_vien` + sửa lỗi chính tả trạng thái | ⬜ |
 | 4 | `0005_view_lich_pv.sql` | View `v_lich_pv` | ⬜ |
 | 5 | `0006_view_onboard.sql` | View `v_onboard` + trạng thái mặc định | ⬜ |
+| 6 | `0007_luu_tru_dung.sql` | Cột `stopped_at` + dựng lại `v_ung_vien` — cho khu lưu trữ cột Dừng | ⬜ |
+| 7 | `0008_bucket_cv.sql` | Bucket Storage `cv-ung-vien` + phân quyền — cho file CV tải lên | ⬜ |
 | — | `0003_gioi_han_hr.sql` | Danh sách email HR được phép | không cần nữa (xem dưới) |
 
 `0003` sinh ra hồi dùng chung project, khi mọi tài khoản của công ty đều đăng nhập được. Project riêng
@@ -143,6 +145,7 @@ dòng kiểm tra.
 - Nhập kết quả PV1 = Đạt → trạng thái CV thành "PV đạt - vòng 1"
 - Nhập kết quả PV2 = Đạt → "Chờ nhận việc" **và tạo sẵn dòng onboard**
 - Đặt lịch PV → đẩy trạng thái lên đúng vòng
+- Đổi sang trạng thái thuộc giai đoạn *dừng* → ghi `candidates.stopped_at`; gọi hồ sơ trở lại thì xoá
 - Mọi thay đổi ghi vào `activity_log`
 
 ---
@@ -183,6 +186,55 @@ File `.xlsx` thật, 29 cột, tiêu đề đặt đúng như sheet Data cũ đ�
 thêm mấy cột tóm tắt phỏng vấn mà bản Excel cũ không có. Dòng tiêu đề tô đỏ thương hiệu,
 đông cứng khi cuộn, có sẵn bộ lọc của Excel. Ngày là ô kiểu ngày `dd/mm/yyyy` (lọc, sắp xếp
 được trong Excel), số điện thoại là ô kiểu văn bản nên **không mất số 0 đầu**.
+
+### Ngày 6 — Khu lưu trữ cho cột Dừng (`/giai-doan`)
+Cột **Dừng** gom cả 4 trạng thái khép hồ sơ (*Loại*, *Phỏng vấn - loại*, *Không đến PV*,
+*Từ chối nhận việc*) nên càng dùng càng dài — vài tháng nữa ca vừa dừng hôm nay sẽ chìm dưới
+hàng trăm thẻ cũ. Nay hồ sơ dừng **quá 1 ngày** rơi xuống khu *Đã dừng từ trước* ngay dưới bảng,
+cột Dừng chỉ còn việc mới.
+
+Mốc đếm là cột mới `candidates.stopped_at`, trigger ghi đúng lúc hồ sơ vào nhóm trạng thái dừng.
+**Không dùng `updated_at`**: sửa một dòng ghi chú cũng đổi nó, hồ sơ cũ sẽ nhảy ngược lên bảng.
+Đổi qua lại giữa hai trạng thái cùng nhóm dừng thì giữ nguyên mốc; kéo hồ sơ về cột khác thì mốc
+bị xoá, thẻ về đúng chỗ.
+
+Trang hỏi cơ sở dữ liệu hai lượt — một cho bảng (lọc bỏ hồ sơ quá hạn), một cho khu lưu trữ
+(tối đa 60 hồ sơ, mới dừng xếp trước, kèm đếm chính xác). Khu lưu trữ **chỉ để xem**: bấm mở
+được hồ sơ nhưng không kéo thả, muốn gọi lại ứng viên thì đổi ô Trạng thái CV trong hộp thoại.
+
+Ngưỡng 1 ngày và mức 60 hồ sơ nằm ở [web/src/lib/giai-doan.ts](web/src/lib/giai-doan.ts).
+
+Chưa chạy `0007` thì trang **vẫn dùng được**: bắt mã lỗi Postgres `42703` (thiếu cột) rồi lùi về
+truy vấn cũ, hiện thẻ vàng "Còn thiếu một bước cài đặt" thay vì để trắng màn hình.
+
+### Ngày 6 — Tải file CV lên hệ thống (`/ung-vien`)
+Trước nay chỉ có ô **Link CV / Portfolio**: HR phải tự cất CV ở Drive hay Zalo rồi dán đường dẫn.
+Nay đính thẳng file lên hệ thống được — giữ nguyên ô link cũ vì nhiều CV vẫn về dạng link TopCV.
+
+Cột `candidates.cv_file_path` **đã có sẵn từ `0001_init.sql`** nhưng chưa chỗ nào dùng, nên lần này
+không phải đụng vào bảng: `0008_bucket_cv.sql` chỉ tạo bucket Storage `cv-ung-vien` và phân quyền.
+View `v_ung_vien` viết `select c.*` mà cột đã có từ lúc tạo view nên cũng không phải dựng lại.
+
+File đi kèm FormData lên **Server Action** rồi mới sang Supabase, chứ không tải thẳng từ trình duyệt.
+Chọn vậy vì HR xác nhận CV thực tế chỉ vài trăm KB, mà đi đường này thì **không bao giờ có file mồ
+côi**: tải lên ngay lúc chọn thì HR bấm Đóng không lưu là file nằm lại bucket vĩnh viễn. Đổi lại phải
+chịu trần 4 MB — xem bảng ba mức chặn trong [BAN-GIAO.md](BAN-GIAO.md).
+
+Thứ tự thao tác trong `actions.ts` giữ cho không bao giờ có link chết: **ghi xong dòng mới xoá file
+cũ**. Ghi hỏng thì xoá file vừa tải, hồ sơ vẫn trỏ vào file cũ nguyên vẹn.
+
+Tiện thể vá một lỗ hổng có sẵn: `cv_url` trước đây **chỉ xuất hiện trong ô nhập giữa form**, mở hồ sơ
+lên không có nút nào bấm thẳng vào CV. Nay CV hiện ở **hai chỗ**: đầu hộp thoại có nút **Mở CV**
+(file đính kèm) và **Link CV** (link ngoài); ngoài danh sách Quản lý CV thì mỗi dòng có một chữ
+**CV** cạnh sĐT/email, bấm mở tab mới — có `stopPropagation` để không bật luôn hộp thoại của dòng.
+Hồ sơ chưa có CV ghi mờ *chưa có CV*, quét một lượt là biết còn thiếu ai. Thêm `linkNgoai()` trong `utils.ts` vì link HR gõ tay hay thiếu `https://`,
+thiếu thì thẻ `<a>` hiểu thành đường dẫn nội bộ rồi nhảy sang trang 404 của chính app.
+
+Bucket để **công khai** — lựa chọn có chủ đích của người dùng, lý do và cách khoá lại ghi ở
+[BAN-GIAO.md](BAN-GIAO.md). Nhờ vậy file Excel xuất ra có thêm cột **File CV đính kèm** bấm mở được.
+
+Chưa chạy `0008` thì app **vẫn dùng được**: bắt chuỗi lỗi `Bucket not found` rồi báo đúng phải chạy
+file nào, ô Link CV không ảnh hưởng.
 
 ---
 
@@ -282,7 +334,7 @@ phân quyền theo phòng ban · giao diện riêng cho điện thoại
 | Lệnh | Việc |
 |---|---|
 | `python tools/gen_seed.py` | Đọc lại Excel → sinh `0002_seed_catalogs.sql` + `catalogs.json` |
-| `bash tools/gop_sql.sh` | Gộp 5 file migration → `web/supabase/setup_project_moi.sql` |
+| `bash tools/gop_sql.sh` | Gộp 7 file migration → `web/supabase/setup_project_moi.sql` |
 
 Sửa file nào trong `web/supabase/migrations/` thì **chạy lại `tools/gop_sql.sh`**, không thì
 `setup_project_moi.sql` vẫn giữ bản cũ.

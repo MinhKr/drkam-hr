@@ -3,6 +3,7 @@
 import { useMemo, useRef, useState, useTransition } from "react";
 import { AlertTriangle, Wand2 } from "lucide-react";
 import { Input, Select, Textarea, Truong } from "@/components/ui/primitives";
+import { OTaiCV } from "./o-tai-cv";
 import { capNhatUngVien, taoUngVien, timTrung, type UngVienTrung } from "@/app/(app)/ung-vien/actions";
 import { dinhDangNgay } from "@/lib/utils";
 import type { UngVienRow } from "@/lib/ung-vien";
@@ -171,8 +172,17 @@ export function FormUngVien({
             placeholder="ten@gmail.com"
           />
         </Truong>
-        <Truong nhan="Link CV / Portfolio" rong htmlFor="cv_url">
+        <Truong
+          nhan="Link CV / Portfolio"
+          rong
+          htmlFor="cv_url"
+          goiY="Dùng khi CV nằm sẵn ở TopCV, Google Drive… — không bắt buộc nếu đã đính file bên dưới"
+        >
           <Input id="cv_url" name="cv_url" defaultValue={uv?.cv_url ?? ""} placeholder="https://…" />
+        </Truong>
+
+        <Truong nhan="File CV đính kèm" rong htmlFor="cv_file">
+          <OTaiCV duongDanHienCo={uv?.cv_file_path} />
         </Truong>
 
         {trung.length > 0 && (

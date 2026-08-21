@@ -1,17 +1,55 @@
 "use client";
 
 import { useState } from "react";
-import { CalendarClock, Mail, Phone, Plus, UserPlus } from "lucide-react";
+import { CalendarClock, ExternalLink, FileText, Mail, Phone, Plus, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AvatarChu, Badge, Card, TrangThaiRong } from "@/components/ui/primitives";
 import { NhanTrangThai } from "./nhan-trang-thai";
 import { HoSoDialog } from "./ho-so-dialog";
 import type { ChonLichPV } from "./dat-lich-pv";
 import type { ChonLua } from "./form-ung-vien";
-import { dinhDangNgay } from "@/lib/utils";
+import { duongDanCongKhai, tenFileTuDuongDan } from "@/lib/cv-file";
+import { dinhDangNgay, linkNgoai } from "@/lib/utils";
 import type { GiaiDoan } from "@/lib/types";
 import type { CaPhongVan } from "@/lib/lich";
 import type { UngVienRow } from "@/lib/ung-vien";
+
+/**
+ * Ô CV trên dòng danh sách — mở thẳng CV khỏi phải vào hồ sơ.
+ *
+ * File đính kèm được ưu tiên hơn link ngoài vì đó là bản nằm trên hệ thống;
+ * hồ sơ có cả hai thì mở hồ sơ ra vẫn thấy đủ. Không có CV thì hiện chữ mờ
+ * "chưa có CV" — quét một lượt là biết còn thiếu ai, đó mới là cái hay của
+ * việc đưa nó ra ngoài dòng.
+ */
+function OCV({ uv }: { uv: UngVienRow }) {
+  const linkFile = duongDanCongKhai(uv.cv_file_path);
+  const linkNgoaiCV = linkNgoai(uv.cv_url);
+  const link = linkFile ?? linkNgoaiCV;
+
+  if (!link) {
+    return <span className="inline-flex items-center gap-1 text-[var(--ink-faint)]">chưa có CV</span>;
+  }
+
+  return (
+    <a
+      href={link}
+      target="_blank"
+      rel="noopener noreferrer"
+      // dòng có onClick mở hồ sơ — chặn lại, không thì bấm CV là bật cả hộp thoại
+      onClick={(e) => e.stopPropagation()}
+      className="inline-flex items-center gap-1 rounded-[var(--r-sm)] text-[var(--primary)] hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--primary)]"
+      title={
+        linkFile
+          ? `Mở file ${tenFileTuDuongDan(uv.cv_file_path)}`
+          : `Mở link CV: ${uv.cv_url ?? ""}`
+      }
+    >
+      {linkFile ? <FileText className="size-3" /> : <ExternalLink className="size-3" />}
+      CV
+    </a>
+  );
+}
 
 export function BangUngVien({
   rows,
@@ -89,6 +127,7 @@ export function BangUngVien({
                                 {r.email}
                               </span>
                             )}
+                            <OCV uv={r} />
                           </span>
                         </div>
                       </div>

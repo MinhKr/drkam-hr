@@ -8,6 +8,7 @@
  */
 
 import ExcelJS from "exceljs";
+import { duongDanCongKhai } from "./cv-file";
 import type { UngVienRow } from "./ung-vien";
 
 const DINH_DANG_NGAY = "dd/mm/yyyy";
@@ -44,6 +45,9 @@ const COT: Cot[] = [
   { nhan: "Số điện thoại", rong: 14, lay: (r) => r.phone, dinhDang: DINH_DANG_CHU },
   { nhan: "Email", rong: 28, lay: (r) => r.email },
   { nhan: "Link CV/Portfolio", rong: 30, lay: (r) => r.cv_url },
+  // Bucket để công khai nên đường dẫn này không hết hạn — dán vào Excel gửi đi
+  // vẫn mở được. Xem phần đầu supabase/migrations/0008_bucket_cv.sql.
+  { nhan: "File CV đính kèm", rong: 30, lay: (r) => duongDanCongKhai(r.cv_file_path) },
   { nhan: "Vị trí ứng tuyển", rong: 26, lay: (r) => r.position },
   { nhan: "Phòng ban", rong: 18, lay: (r) => r.department },
   { nhan: "Cấp bậc", rong: 14, lay: (r) => r.level },

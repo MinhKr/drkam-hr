@@ -103,6 +103,10 @@ Hai loại cần điền `meta`:
 
 Thiếu `meta` thì không hỏng gì, chỉ mất phần tự điền, và trạng thái mới sẽ rơi vào cột *Mới về*.
 
+> Đặt `stage` là `dung` còn có tác dụng khác: hồ sơ chuyển sang trạng thái đó sẽ được ghi mốc
+> `stopped_at`, và sau **1 ngày** tự rơi xuống khu *Đã dừng từ trước* dưới Bảng giai đoạn. Trigger
+> tra thẳng `meta.stage` trong bảng `catalogs` nên sửa ở đây là có hiệu lực ngay, không phải deploy lại.
+
 ### Xoá dữ liệu thử để nhập lại từ đầu
 
 Chạy [web/supabase/xoa_du_lieu.sql](web/supabase/xoa_du_lieu.sql) trong SQL Editor. Xoá hết ứng viên,
@@ -124,6 +128,47 @@ từng đoạn** — làm vậy có thể bỏ qua dòng kiểm tra.
 
 Project Supabase cũ (dùng chung với app dashboard, ref `wgkxrfljzztdlrqcnfjz`): **không dùng nữa,
 không chạy file SQL nào lên đó.** Schema `tuyendung` bên ấy để nguyên cũng không ảnh hưởng app cũ.
+
+### File migration mới chưa chạy
+
+`setup_project_moi.sql` chỉ dùng cho project còn trống. Project đang chạy thật thì mở đúng file mới
+trong `web/supabase/migrations/` rồi Run, mỗi file một lần.
+
+| File | Việc | Chưa chạy thì sao |
+|---|---|---|
+| `0007_luu_tru_dung.sql` | Thêm cột `stopped_at` cho khu lưu trữ của cột Dừng | Bảng giai đoạn vẫn chạy, hiện thẻ vàng *"Còn thiếu một bước cài đặt"*, chưa có khu lưu trữ |
+| `0008_bucket_cv.sql` | Tạo bucket Storage `cv-ung-vien` để đính file CV | Đính file CV báo lỗi nhắc chạy file này; ô Link CV vẫn dùng bình thường |
+
+Cả hai file đều chỉ **thêm** chứ không xoá hay sửa dữ liệu sẵn có, chạy nhầm hai lần cũng không sao.
+`0008` không đụng tới bảng nào — nó chỉ tạo chỗ chứa file và phân quyền cho chỗ đó.
+
+### Vì sao bucket CV để công khai
+
+Đây là lựa chọn có chủ đích chứ không phải sót. HR cần dán được đường dẫn CV vào file Excel xuất ra
+và gửi cho trưởng bộ phận, mà đường dẫn có hạn thì làm vậy không được.
+
+Đổi lại: **ai cầm được đường dẫn cũng mở ra xem được mà không cần đăng nhập.** App đặt tên thư mục
+bằng UUID ngẫu nhiên nên người ngoài không mò ra, nhưng đường dẫn đã lọt ra ngoài thì không thu lại
+được — mà CV có số điện thoại, email, mức lương mong muốn.
+
+Muốn khoá lại: đổi `public` thành `false` ở mục 1 của `0008_bucket_cv.sql`, chạy lại file, rồi sửa
+`duongDanCongKhai()` trong [web/src/lib/cv-file.ts](web/src/lib/cv-file.ts) sang dùng
+`createSignedUrl`. Lúc đó cột "File CV đính kèm" trong Excel sẽ hết tác dụng.
+
+### Mức trần 4 MB cho file CV đến từ đâu
+
+File đi kèm form lên Server Action rồi mới sang Supabase, nên bị chặn ở ba chỗ. Ba con số đặt so le
+để lỗi luôn rơi vào chỗ có lời nhắc tiếng Việt, không phải lỗi 413 trơ trụi:
+
+| Chặn ở đâu | Mức | Sửa ở đâu |
+|---|---|---|
+| Trình duyệt, trước khi gửi | 4 MB | `TOI_DA_MB` trong [web/src/lib/cv-file.ts](web/src/lib/cv-file.ts) |
+| Next.js | 5 MB | `serverActions.bodySizeLimit` trong [web/next.config.ts](web/next.config.ts) |
+| Bucket Supabase | 5 MB | `file_size_limit` trong `0008_bucket_cv.sql` |
+
+Vercel còn chặn cứng **4.5 MB** mỗi request và không chỉnh được, nên đừng nâng `TOI_DA_MB` quá 4.
+Thật sự cần đính file nặng hơn thì phải đổi cách làm: cho trình duyệt tải thẳng lên Supabase, không
+đi qua máy chủ nữa.
 
 ---
 

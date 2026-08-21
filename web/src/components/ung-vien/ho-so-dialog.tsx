@@ -2,18 +2,58 @@
 
 import { useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
-import { Loader2, Save, UserPlus, X } from "lucide-react";
+import { ExternalLink, FileText, Loader2, Save, UserPlus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AvatarChu } from "@/components/ui/primitives";
 import { NhanTrangThai } from "./nhan-trang-thai";
 import { DatLichPV, type ChonLichPV } from "./dat-lich-pv";
 import { FormUngVien, type ChonLua } from "./form-ung-vien";
-import { cn, dinhDangNgay } from "@/lib/utils";
+import { duongDanCongKhai, tenFileTuDuongDan } from "@/lib/cv-file";
+import { cn, dinhDangNgay, linkNgoai } from "@/lib/utils";
 import type { GiaiDoan } from "@/lib/types";
 import type { CaPhongVan } from "@/lib/lich";
 import type { UngVienRow } from "@/lib/ung-vien";
 
 const FORM_ID = "form-ung-vien";
+
+/**
+ * Nút mở CV ngay ở đầu hộp thoại.
+ *
+ * Trước đây CV chỉ nằm trong ô nhập giữa form — muốn xem phải cuộn xuống nhóm
+ * Liên hệ rồi tự copy đường dẫn. Hai nguồn CV hiện cả hai nếu có: file đính kèm
+ * đứng trước vì đó là bản nằm trên hệ thống.
+ */
+function NutMoCV({ uv }: { uv: UngVienRow }) {
+  const linkFile = duongDanCongKhai(uv.cv_file_path);
+  const linkNgoaiCV = linkNgoai(uv.cv_url);
+  if (!linkFile && !linkNgoaiCV) return null;
+
+  return (
+    <>
+      {linkFile && (
+        <Button variant="outline" size="sm" asChild>
+          <a
+            href={linkFile}
+            target="_blank"
+            rel="noopener noreferrer"
+            title={tenFileTuDuongDan(uv.cv_file_path)}
+          >
+            <FileText />
+            Mở CV
+          </a>
+        </Button>
+      )}
+      {linkNgoaiCV && (
+        <Button variant="ghost" size="sm" asChild>
+          <a href={linkNgoaiCV} target="_blank" rel="noopener noreferrer" title={uv.cv_url ?? ""}>
+            <ExternalLink />
+            Link CV
+          </a>
+        </Button>
+      )}
+    </>
+  );
+}
 
 /**
  * Hộp thoại hồ sơ ứng viên — dùng chung cho màn hình Quản lý CV và Bảng giai đoạn.
@@ -94,11 +134,14 @@ export function HoSoDialog({
                 )}
               </div>
             </div>
-            <Dialog.Close asChild>
-              <Button variant="ghost" size="icon-sm" aria-label="Đóng">
-                <X />
-              </Button>
-            </Dialog.Close>
+            <div className="flex shrink-0 items-center gap-1.5">
+              {dangMo && dangMo !== "moi" && <NutMoCV uv={dangMo} />}
+              <Dialog.Close asChild>
+                <Button variant="ghost" size="icon-sm" aria-label="Đóng">
+                  <X />
+                </Button>
+              </Dialog.Close>
+            </div>
           </div>
 
           {/* ---- Tab: chỉ có khi mở hồ sơ đã tồn tại ---- */}

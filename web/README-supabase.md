@@ -43,7 +43,7 @@ Chờ khoảng 2 phút cho project khởi tạo xong.
 
 **SQL Editor** ở thanh trái → mở **`web/supabase/setup_project_moi.sql`** → copy toàn bộ → dán vào → **Run**.
 
-File đó gộp sẵn 5 file migration theo đúng thứ tự, dán một lần là xong. Supabase chạy cả file trong một
+File đó gộp sẵn 7 file migration theo đúng thứ tự, dán một lần là xong. Supabase chạy cả file trong một
 giao dịch nên hỏng giữa đường thì huỷ sạch, không để lại cơ sở dữ liệu nửa vời. **Đừng bôi đen chạy từng
 đoạn** — làm vậy mất cả tính chất đó lẫn dòng kiểm tra an toàn.
 
@@ -59,11 +59,15 @@ giao dịch nên hỏng giữa đường thì huỷ sạch, không để lại c
 | 3 | `migrations/0004_view_ung_vien.sql` | View `v_ung_vien` cho màn hình Quản lý CV |
 | 4 | `migrations/0005_view_lich_pv.sql` | View `v_lich_pv` cho màn hình Lịch PV |
 | 5 | `migrations/0006_view_onboard.sql` | View `v_onboard` cho màn hình Onboard |
+| 6 | `migrations/0007_luu_tru_dung.sql` | Cột `stopped_at` + khu lưu trữ của cột Dừng |
+| 7 | `migrations/0008_bucket_cv.sql` | Bucket `cv-ung-vien` để chứa file CV tải lên |
 
-**Phải chạy `0001` đầu tiên** — nó tạo hàm kiểm tra mà 4 file sau đều gọi. Sai thứ tự sẽ gặp lỗi
+**Phải chạy `0001` đầu tiên** — nó tạo hàm kiểm tra mà 6 file sau đều gọi. Sai thứ tự sẽ gặp lỗi
 `function public.f_kiem_tra_project() does not exist`; đó là dấu hiệu bỏ qua `0001` chứ không phải file lỗi.
 
 Thiếu file nào thì màn hình tương ứng báo *"v_… không tồn tại"* — bỏ sót `0006` là trang Onboard trắng.
+Bỏ sót `0007` thì Bảng giai đoạn vẫn chạy nhưng báo *"Còn thiếu một bước cài đặt"* và không có khu lưu trữ.
+Bỏ sót `0008` thì đính file CV báo lỗi nhắc chạy file đó; ô Link CV vẫn dùng bình thường.
 
 </details>
 
@@ -71,12 +75,37 @@ Thiếu file nào thì màn hình tương ứng báo *"v_… không tồn tại"
 project với app cũ. Project này chỉ có tài khoản do bạn tự tạo nên không cần lớp đó nữa. Muốn thêm một
 lớp nữa thì đọc phần đầu file rồi chạy.
 
-Xong 5 file, vào **Table Editor** (schema `public`) sẽ thấy: `candidates`, `interviews`, `onboardings`,
-`catalogs`, `activity_log`.
+Xong 7 file, vào **Table Editor** (schema `public`) sẽ thấy: `candidates`, `interviews`, `onboardings`,
+`catalogs`, `activity_log`. Vào **Storage** sẽ thấy thêm một bucket tên `cv-ung-vien` — chỗ chứa file CV
+tải lên, do `0008` tạo.
 
 > **Cơ sở dữ liệu lúc này chưa có ứng viên nào** — đúng như bạn cần để tự nhập tay.
 > Riêng `catalogs` có 237 dòng: đó không phải dữ liệu ứng viên mà là giá trị cho các ô chọn
 > (49 vị trí, 23 nguồn CV, 13 trạng thái, 12 người PV…). Không có nó thì mọi dropdown đều trống.
+
+---
+
+## Project đã chạy rồi thì làm gì khi có file migration mới
+
+`setup_project_moi.sql` chỉ dành cho project còn trống. Project đang có dữ liệu thật thì **đừng chạy lại
+nó** — chạy đúng file mới trong `migrations/` là đủ, mỗi file chỉ chạy một lần.
+
+| File | Chạy khi | Ảnh hưởng dữ liệu |
+|---|---|---|
+| `0007_luu_tru_dung.sql` | Muốn cột **Dừng** của Bảng giai đoạn tự dọn hồ sơ cũ xuống khu lưu trữ | Thêm cột `stopped_at`, điền sẵn mốc cho hồ sơ đã dừng. Không xoá, không sửa dòng nào khác. |
+| `0008_bucket_cv.sql` | Muốn đính thẳng file CV lên hệ thống thay vì chỉ dán link | Tạo bucket Storage `cv-ung-vien` và phân quyền cho nó. **Không đụng gì tới bảng dữ liệu.** |
+
+Cách chạy: **SQL Editor** → mở file → copy toàn bộ → dán → **Run**, y như Bước 2. Chạy nhầm hai lần cũng
+không sao, các câu lệnh đều viết kiểu chạy lại được (`if not exists`, `create or replace`).
+
+Chưa chạy `0007` thì Bảng giai đoạn **vẫn dùng bình thường**, chỉ hiện một thẻ vàng "Còn thiếu một bước
+cài đặt" và chưa có khu lưu trữ. Chưa chạy `0008` thì đính file CV sẽ báo lỗi nhắc chạy đúng file đó,
+còn ô **Link CV** vẫn dán được như trước.
+
+> `0008` là file duy nhất đụng tới **Storage** chứ không phải bảng dữ liệu. Nếu SQL Editor báo
+> `must be owner of table objects` ở mục 2 của file, đó là project hạn chế quyền trên `storage.objects`:
+> bucket đã tạo xong rồi, chỉ còn phân quyền — vào **Storage → cv-ung-vien → Policies** tạo tay 4 policy
+> đúng như mô tả trong file.
 
 ---
 
