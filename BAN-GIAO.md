@@ -83,7 +83,8 @@ tay nắm bên trái. Cần file `0010_danh_muc_crud.sql` (xem mục 3).
 Con số mờ bên phải mỗi dòng là **số hồ sơ đang dùng** giá trị đó — nhìn trước khi xoá.
 
 **Ẩn khác xoá.** *Ẩn* làm giá trị biến mất khỏi mọi ô chọn nhưng hồ sơ cũ vẫn đọc được bình thường,
-kể cả Bảng giai đoạn vẫn xếp đúng cột. *Xoá hẳn* thì hồ sơ cũ vẫn giữ nguyên chữ đó nhưng chữ đó
+kể cả Bảng giai đoạn vẫn xếp đúng cột. Mở một hồ sơ cũ vẫn thấy đúng giá trị, kèm chú thích
+*(không còn trong danh mục)* trong ô chọn — lưu lại cũng không mất. *Xoá hẳn* thì hồ sơ cũ vẫn giữ nguyên chữ đó nhưng chữ đó
 không còn trong danh mục: mở hồ sơ ra ô chọn trống, bộ lọc mất mục đó. **Với giá trị đang có hồ sơ
 dùng thì ẩn gần như luôn là lựa chọn đúng.**
 

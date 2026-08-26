@@ -42,6 +42,7 @@ import {
   CardHeader,
   CardTitle,
   Input,
+  OptionDanhMuc,
   Select,
   Truong,
 } from "@/components/ui/primitives";
@@ -534,22 +535,20 @@ function HopThoaiSua({
                   goiY="Chọn vị trí này khi thêm hồ sơ thì app tự điền phòng ban và cấp bậc theo đây."
                 >
                   <Select id="dm-dept" name="meta_department" defaultValue={cu?.meta?.department ?? ""}>
-                    <option value="">— chưa đặt —</option>
-                    {phongBan.map((p) => (
-                      <option key={p} value={p}>
-                        {p}
-                      </option>
-                    ))}
+                    <OptionDanhMuc
+                      danhSach={phongBan}
+                      giaTri={cu?.meta?.department}
+                      nhanTrong="— chưa đặt —"
+                    />
                   </Select>
                 </Truong>
                 <Truong nhan="Cấp bậc" htmlFor="dm-level">
                   <Select id="dm-level" name="meta_level" defaultValue={cu?.meta?.level ?? ""}>
-                    <option value="">— chưa đặt —</option>
-                    {capBac.map((c) => (
-                      <option key={c} value={c}>
-                        {c}
-                      </option>
-                    ))}
+                    <OptionDanhMuc
+                      danhSach={capBac}
+                      giaTri={cu?.meta?.level}
+                      nhanTrong="— chưa đặt —"
+                    />
                   </Select>
                 </Truong>
               </>

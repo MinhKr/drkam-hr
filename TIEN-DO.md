@@ -316,6 +316,17 @@ nên chưa lộ, nhưng ngày HR bấm Ẩn một Trạng thái CV thì mọi h�
 về cột Mới về** — `banDo[uv.status] ?? "moi_ve"`. Nay tầng đọc lấy cả dòng ẩn, việc lọc chuyển xuống
 `layTheoLoai`; ẩn giờ đúng nghĩa "đừng cho chọn nữa", hồ sơ cũ vẫn nằm đúng chỗ.
 
+**Lỗ thứ hai, lộ ra ngay khi vừa cho ẩn được.** Mọi ô chọn trong app dựng `<option>` từ danh sách
+đang hiện. Giá trị hồ sơ đang mang mà không có trong danh sách đó thì trình duyệt rơi về option đầu —
+tức *"— chọn —"*. Nên hồ sơ cũ mang vị trí vừa bị ẩn, mở ra thấy ô TRỐNG dù dữ liệu vẫn còn; HR bấm
+Lưu là `locDuLieu` ghi `null` đè lên, mất luôn, không báo gì. Ẩn hay xoá đều dính.
+
+Vá bằng một `OptionDanhMuc` dùng chung: giá trị lạ vẫn được dựng thành option, kèm chú thích
+*(không còn trong danh mục)*. Thay cho 12 chỗ tự `.map` ra option — form hồ sơ, bộ lọc, đặt lịch PV,
+danh sách PV, hồ sơ onboard, và cả hộp thoại sửa vị trí của chính màn hình Danh mục. Người phỏng vấn
+hiện bằng chip chứ không phải ô chọn nên xử riêng: gộp thêm người mà buổi PV đang ghi nhưng đã bị ẩn,
+không thì họ biến mất khỏi màn hình dù tên vẫn nằm trong `interviewers`.
+
 **Nhật ký dùng lại trigger cũ.** Định cho server action tự ghi vào `activity_log` thì phát hiện bảng
 đó chỉ có policy **SELECT** cho `authenticated` — câu insert sẽ bị RLS chặn lặng lẽ, tưởng ghi được
 mà không ghi gì. Hàm `tg_activity_log()` của `0001` vốn đã `security definer` và đọc tên bảng từ

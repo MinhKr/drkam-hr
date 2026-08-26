@@ -152,6 +152,42 @@ export function Select({
   );
 }
 
+/**
+ * Danh sách <option> cho mọi ô chọn nạp giá trị từ Danh mục.
+ *
+ * Hồ sơ lưu CHUỖI THÔ chứ không trỏ khoá ngoại về catalogs, nên giá trị hồ sơ
+ * đang mang hoàn toàn có thể đã bị ẩn hoặc xoá khỏi danh mục. Không chèn nó
+ * vào đây thì trình duyệt rơi về option đầu: ô hiện TRỐNG dù hồ sơ vẫn có dữ
+ * liệu, và HR bấm Lưu một phát là ghi đè mất luôn, không báo gì.
+ *
+ * Nên giá trị lạ vẫn được dựng thành một option, kèm chú thích để HR hiểu vì
+ * sao nó không nằm chung với phần còn lại.
+ */
+export function OptionDanhMuc({
+  danhSach,
+  giaTri,
+  nhanTrong = "— chọn —",
+}: {
+  danhSach: string[];
+  giaTri?: string | null;
+  nhanTrong?: string;
+}) {
+  const v = (giaTri ?? "").trim();
+  const laLa = v !== "" && !danhSach.includes(v);
+
+  return (
+    <>
+      <option value="">{nhanTrong}</option>
+      {danhSach.map((x) => (
+        <option key={x} value={x}>
+          {x}
+        </option>
+      ))}
+      {laLa && <option value={v}>{v} (không còn trong danh mục)</option>}
+    </>
+  );
+}
+
 export function Label({ className, ...props }: React.LabelHTMLAttributes<HTMLLabelElement>) {
   return (
     <label

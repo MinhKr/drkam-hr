@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, useTransition } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Download, RotateCcw, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input, Select } from "@/components/ui/primitives";
+import { Input, OptionDanhMuc, Select } from "@/components/ui/primitives";
 import { NhapExcelDialog } from "./nhap-excel-dialog";
 import { cn } from "@/lib/utils";
 
@@ -93,12 +93,11 @@ export function BoLoc({ nhom, tong }: { nhom: NhomChon; tong: number }) {
           onChange={(e) => dat({ [khoa]: e.target.value || null })}
           className="w-auto min-w-[130px] max-w-[190px]"
         >
-          <option value="">{nhan}: tất cả</option>
-          {nhom[khoa].map((v) => (
-            <option key={v} value={v}>
-              {v}
-            </option>
-          ))}
+          <OptionDanhMuc
+            danhSach={nhom[khoa]}
+            giaTri={sp.get(khoa)}
+            nhanTrong={`${nhan}: tất cả`}
+          />
         </Select>
       ))}
 

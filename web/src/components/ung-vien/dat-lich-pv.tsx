@@ -4,7 +4,7 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { CalendarPlus, Check, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge, Input, Select, Truong } from "@/components/ui/primitives";
+import { Badge, Input, OptionDanhMuc, Select, Truong } from "@/components/ui/primitives";
 import { luuLichPV, nhapKetQua } from "@/app/(app)/lich-phong-van/actions";
 import type { CaPhongVan } from "@/lib/lich";
 
@@ -35,6 +35,14 @@ function MotVong({
   const [hinhThuc, setHinhThuc] = useState(ca?.mode ?? "");
   const [nguoi, setNguoi] = useState<string[]>(ca?.interviewers ?? []);
   const [ketQua, setKetQua] = useState(ca?.result ?? "");
+
+  /**
+   * Người phỏng vấn hiện thành chip chứ không phải ô chọn, nên phải gộp thêm
+   * người mà buổi PV này đang ghi nhưng đã bị ẩn khỏi danh mục — không thì họ
+   * biến mất khỏi màn hình dù tên vẫn nằm trong interviewers, HR không thấy để
+   * bỏ ra mà cũng không hiểu vì sao thiếu.
+   */
+  const dsNguoiPV = [...chon.nguoi_pv, ...nguoi.filter((n) => !chon.nguoi_pv.includes(n))];
 
   function doiNguoi(ten: string) {
     setNguoi((cu) => (cu.includes(ten) ? cu.filter((x) => x !== ten) : [...cu, ten]));
@@ -79,12 +87,7 @@ function MotVong({
         </Truong>
         <Truong nhan="Hình thức">
           <Select value={hinhThuc} onChange={(e) => setHinhThuc(e.target.value)}>
-            <option value="">— chọn —</option>
-            {chon.hinh_thuc.map((v) => (
-              <option key={v} value={v}>
-                {v}
-              </option>
-            ))}
+            <OptionDanhMuc danhSach={chon.hinh_thuc} giaTri={hinhThuc} />
           </Select>
         </Truong>
         <Truong nhan="Kết quả" goiY={ca ? undefined : "Lưu lịch xong mới nhập được kết quả"}>
@@ -93,12 +96,7 @@ function MotVong({
             onChange={(e) => setKetQua(e.target.value)}
             disabled={!ca}
           >
-            <option value="">— chưa có —</option>
-            {chon.ket_qua.map((v) => (
-              <option key={v} value={v}>
-                {v}
-              </option>
-            ))}
+            <OptionDanhMuc danhSach={chon.ket_qua} giaTri={ketQua} nhanTrong="— chưa có —" />
           </Select>
         </Truong>
       </div>
@@ -106,7 +104,7 @@ function MotVong({
       <div className="flex flex-col gap-1.5">
         <span className="text-sm font-medium text-[var(--ink-2)]">Người phỏng vấn</span>
         <div className="flex flex-wrap gap-1.5">
-          {chon.nguoi_pv.map((ten) => {
+          {dsNguoiPV.map((ten) => {
             const chonRoi = nguoi.includes(ten);
             return (
               <button

@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Check, Loader2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { AvatarChu, Badge, Input, Select, Textarea, Truong } from "@/components/ui/primitives";
+import { AvatarChu, Badge, Input, OptionDanhMuc, Select, Textarea, Truong } from "@/components/ui/primitives";
 import { capNhatOnboard, ghiKetQuaDanhGia, tickViec } from "@/app/(app)/onboard/actions";
 import {
   cacMoc,
@@ -158,12 +158,7 @@ export function HoSoOnboard({
                       defaultValue={dong.office ?? ""}
                       onChange={(e) => luuTruong("office", e.target.value)}
                     >
-                      <option value="">— chọn —</option>
-                      {chon.van_phong.map((v) => (
-                        <option key={v} value={v}>
-                          {v}
-                        </option>
-                      ))}
+                      <OptionDanhMuc danhSach={chon.van_phong} giaTri={dong.office} />
                     </Select>
                   </Truong>
                   <Truong nhan="Trạng thái vòng đời">
@@ -171,12 +166,7 @@ export function HoSoOnboard({
                       defaultValue={dong.status ?? ""}
                       onChange={(e) => luuTruong("status", e.target.value)}
                     >
-                      <option value="">— chọn —</option>
-                      {chon.trang_thai.map((v) => (
-                        <option key={v} value={v}>
-                          {v}
-                        </option>
-                      ))}
+                      <OptionDanhMuc danhSach={chon.trang_thai} giaTri={dong.status} />
                     </Select>
                   </Truong>
                   <Truong nhan="HR phụ trách chung">
@@ -184,12 +174,7 @@ export function HoSoOnboard({
                       defaultValue={dong.owner ?? ""}
                       onChange={(e) => luuTruong("owner", e.target.value)}
                     >
-                      <option value="">— chọn —</option>
-                      {chon.nguoi_phu_trach.map((v) => (
-                        <option key={v} value={v}>
-                          {v}
-                        </option>
-                      ))}
+                      <OptionDanhMuc danhSach={chon.nguoi_phu_trach} giaTri={dong.owner} />
                     </Select>
                   </Truong>
                   <Truong nhan="Ghi chú chuẩn bị" rong>
@@ -277,12 +262,10 @@ export function HoSoOnboard({
                           defaultValue={nguoiHienTai ?? ""}
                           onChange={(e) => luuTruong(nguoiTruong, e.target.value)}
                         >
-                          <option value="">— chọn —</option>
-                          {chon.nguoi_phu_trach.map((v) => (
-                            <option key={v} value={v}>
-                              {v}
-                            </option>
-                          ))}
+                          <OptionDanhMuc
+                            danhSach={chon.nguoi_phu_trach}
+                            giaTri={nguoiHienTai}
+                          />
                         </Select>
                       </div>
                     )}
@@ -334,12 +317,11 @@ export function HoSoOnboard({
                           onChange={(e) => luuDanhGia(m.khoa, e.target.value)}
                           disabled={!dong.onboard_date}
                         >
-                          <option value="">— chưa đánh giá —</option>
-                          {chon.ket_qua.map((v) => (
-                            <option key={v} value={v}>
-                              {v}
-                            </option>
-                          ))}
+                          <OptionDanhMuc
+                            danhSach={chon.ket_qua}
+                            giaTri={m.ketQua}
+                            nhanTrong="— chưa đánh giá —"
+                          />
                         </Select>
                       </div>
                     );

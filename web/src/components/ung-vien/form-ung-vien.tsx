@@ -2,7 +2,7 @@
 
 import { useMemo, useRef, useState, useTransition } from "react";
 import { AlertTriangle, Wand2 } from "lucide-react";
-import { Input, Select, Textarea, Truong } from "@/components/ui/primitives";
+import { Input, OptionDanhMuc, Select, Textarea, Truong } from "@/components/ui/primitives";
 import { OTaiCV } from "./o-tai-cv";
 import { capNhatUngVien, taoUngVien, timTrung, type UngVienTrung } from "@/app/(app)/ung-vien/actions";
 import { dinhDangNgay } from "@/lib/utils";
@@ -48,12 +48,7 @@ function OChon({
 }) {
   return (
     <Select name={ten} defaultValue={giaTri ?? ""} id={ten}>
-      <option value="">— chọn —</option>
-      {danhSach.map((v) => (
-        <option key={v} value={v}>
-          {v}
-        </option>
-      ))}
+      <OptionDanhMuc danhSach={danhSach} giaTri={giaTri} />
     </Select>
   );
 }
@@ -214,12 +209,7 @@ export function FormUngVien({
             value={viTri}
             onChange={(e) => chonViTri(e.target.value)}
           >
-            <option value="">— chọn —</option>
-            {chon.vi_tri.map((v) => (
-              <option key={v.value} value={v.value}>
-                {v.value}
-              </option>
-            ))}
+            <OptionDanhMuc danhSach={chon.vi_tri.map((v) => v.value)} giaTri={viTri} />
           </Select>
         </Truong>
         <Truong nhan="Nguồn CV" htmlFor="source">
@@ -236,12 +226,7 @@ export function FormUngVien({
             value={phongBan}
             onChange={(e) => setPhongBan(e.target.value)}
           >
-            <option value="">— chọn —</option>
-            {chon.phong_ban.map((v) => (
-              <option key={v} value={v}>
-                {v}
-              </option>
-            ))}
+            <OptionDanhMuc danhSach={chon.phong_ban} giaTri={phongBan} />
           </Select>
         </Truong>
         <Truong
@@ -250,12 +235,7 @@ export function FormUngVien({
           htmlFor="level"
         >
           <Select id="level" name="level" value={capBac} onChange={(e) => setCapBac(e.target.value)}>
-            <option value="">— chọn —</option>
-            {chon.cap_bac.map((v) => (
-              <option key={v} value={v}>
-                {v}
-              </option>
-            ))}
+            <OptionDanhMuc danhSach={chon.cap_bac} giaTri={capBac} />
           </Select>
         </Truong>
 

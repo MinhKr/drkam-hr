@@ -4,7 +4,7 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { AlertTriangle, Check, Loader2, Mail, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { AvatarChu, Badge, Card, Select, TrangThaiRong } from "@/components/ui/primitives";
+import { AvatarChu, Badge, Card, OptionDanhMuc, Select, TrangThaiRong } from "@/components/ui/primitives";
 import { danhDauDaGuiMail, nhapKetQua, xoaLichPV } from "@/app/(app)/lich-phong-van/actions";
 import { dinhDangNgay } from "@/lib/utils";
 import type { CaPhongVan } from "@/lib/lich";
@@ -138,12 +138,11 @@ export function DanhSachPV({
                       onChange={(e) => doiKetQua(c.id, e.target.value)}
                       aria-label={`Kết quả phỏng vấn của ${c.full_name}`}
                     >
-                      <option value="">— chưa có —</option>
-                      {ketQuaChon.map((k) => (
-                        <option key={k} value={k}>
-                          {k}
-                        </option>
-                      ))}
+                      <OptionDanhMuc
+                        danhSach={ketQuaChon}
+                        giaTri={c.result}
+                        nhanTrong="— chưa có —"
+                      />
                     </Select>
                     {dangSua === c.id && dangChay && (
                       <Loader2 className="size-4 animate-spin text-[var(--ink-faint)]" />
