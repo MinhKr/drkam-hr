@@ -114,6 +114,7 @@ Trên project mới thì chưa file nào chạy. **`0001` phải chạy đầu t
 | 5 | `0006_view_onboard.sql` | View `v_onboard` + trạng thái mặc định | ⬜ |
 | 6 | `0007_luu_tru_dung.sql` | Cột `stopped_at` + dựng lại `v_ung_vien` — cho khu lưu trữ cột Dừng | ⬜ |
 | 7 | `0008_bucket_cv.sql` | Bucket Storage `cv-ung-vien` + phân quyền — cho file CV tải lên | ⬜ |
+| 8 | `0009_stopped_at_khi_nhap.sql` | Trigger tôn trọng mốc dừng chỉ định sẵn — cho nhập Excel | ⬜ |
 | — | `0003_gioi_han_hr.sql` | Danh sách email HR được phép | không cần nữa (xem dưới) |
 
 `0003` sinh ra hồi dùng chung project, khi mọi tài khoản của công ty đều đăng nhập được. Project riêng
@@ -236,6 +237,40 @@ Bucket để **công khai** — lựa chọn có chủ đích của người dù
 Chưa chạy `0008` thì app **vẫn dùng được**: bắt chuỗi lỗi `Bucket not found` rồi báo đúng phải chạy
 file nào, ô Link CV không ảnh hưởng.
 
+### Ngày 7 — Nhập hàng loạt ứng viên từ Excel (`/ung-vien`)
+Trước nay chỉ thêm được từng hồ sơ một qua form, nên nạp bù dữ liệu cũ từ tháng 2 là bất khả thi.
+Nay có nút **Nhập Excel** cạnh nút Xuất Excel.
+
+**Một bộ đọc dùng cho hai kiểu file.** Tên cột của `DATA UV DRKAM 2026.xlsx` gốc và của file app xuất
+ra vốn trùng nhau, chỉ khác chỗ đặt header: file gốc để tiêu đề nhóm có emoji ở dòng 1 và tên cột
+thật ở **dòng 2**, file app để tên cột ngay **dòng 1**. Bộ đọc tự dò dòng nào có ô *Họ và tên* nên
+nhận cả hai — và mở ra một lối làm việc mới: **xuất ra → sửa hàng loạt trong Excel → nạp lại**.
+File gốc nhiều sheet nên còn phải dò cả sheet, lấy sheet đầu tiên là trúng nhầm `DATA GỐC`.
+
+**Hai bước, xem trước rồi mới nhập.** Bước xác nhận **đọc lại chính file đó** chứ không nhận mảng dữ
+liệu do trình duyệt gửi ngược lên — khỏi phải kiểm lại dữ liệu client gửi, khỏi lo mảng JSON nghìn
+dòng vượt giới hạn body, và danh sách trùng được dò lại theo cơ sở dữ liệu tại đúng lúc nhập.
+
+Dò trùng bằng **một truy vấn** lấy toàn bộ `phone_norm`/`email` rồi đối chiếu trong bộ nhớ, không gọi
+`find_duplicates` từng dòng. Ghi vào lưới cả dạng thô lẫn dạng đã chuẩn hoá vì `f_phone_norm` bên SQL
+chỉ bỏ ký tự không phải số, còn `chuanHoaSdt` bên app đổi `+84` thành `0`. Đối chiếu cả trong nội bộ
+file — file cũ hay tự lặp.
+
+Chặt tay với **Trạng thái CV**: giá trị lạ là loại dòng đó. Nó quyết định hồ sơ nằm cột nào trên Bảng
+giai đoạn và có bị tính là đã dừng không, lọt một giá trị lạ là hỏng cả hai màn hình. Vị trí, nguồn,
+phòng ban thì thoáng — chỉ nhắc ở màn xem trước, vẫn nhập.
+
+**Chỗ vướng phải sửa trước:** trigger `stopped_at` của ngày 6 đặt mốc dừng là lúc chèn dòng, nên nạp
+bù sẽ khiến hàng trăm hồ sơ loại từ tháng 2 đổ hết vào cột Dừng. `0009` sửa để trigger chỉ tự đặt mốc
+khi dòng chèn vào chưa nói rõ; bộ nhập điền mốc theo ngày nhận CV. Thêm hồ sơ bằng tay không đổi gì.
+
+Giới hạn 4 MB và 2.000 dòng mỗi lần, lý do giống `cv-file.ts` — Vercel chặn cứng 4.5 MB mỗi request.
+Hằng số để riêng ở [han-muc-nhap.ts](web/src/lib/han-muc-nhap.ts) vì hộp thoại là client component,
+để chung với `nhap-excel.ts` là kéo cả exceljs vào bundle trình duyệt.
+
+Kèm route `/ung-vien/mau-nhap` tải file mẫu chỉ có dòng tiêu đề, dựng từ cùng danh sách cột với bộ
+đọc nên không thể lệch nhau.
+
 ---
 
 ## Tốc độ chuyển tab — số đo thật (17/08)
@@ -334,7 +369,7 @@ phân quyền theo phòng ban · giao diện riêng cho điện thoại
 | Lệnh | Việc |
 |---|---|
 | `python tools/gen_seed.py` | Đọc lại Excel → sinh `0002_seed_catalogs.sql` + `catalogs.json` |
-| `bash tools/gop_sql.sh` | Gộp 7 file migration → `web/supabase/setup_project_moi.sql` |
+| `bash tools/gop_sql.sh` | Gộp 8 file migration → `web/supabase/setup_project_moi.sql` |
 
 Sửa file nào trong `web/supabase/migrations/` thì **chạy lại `tools/gop_sql.sh`**, không thì
 `setup_project_moi.sql` vẫn giữ bản cũ.

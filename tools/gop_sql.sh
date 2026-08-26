@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Gộp 7 file migration thành web/supabase/setup_project_moi.sql để dán một lần
+# Gộp 8 file migration thành web/supabase/setup_project_moi.sql để dán một lần
 # vào Supabase SQL Editor khi dựng project mới.
 #
 # Chạy lại mỗi khi sửa bất kỳ file nào trong web/supabase/migrations/:
@@ -12,14 +12,14 @@ set -euo pipefail
 
 GOC="$(cd "$(dirname "$0")/.." && pwd)/web/supabase"
 OUT="$GOC/setup_project_moi.sql"
-FILES=(0001_init 0002_seed_catalogs 0004_view_ung_vien 0005_view_lich_pv 0006_view_onboard 0007_luu_tru_dung 0008_bucket_cv)
+FILES=(0001_init 0002_seed_catalogs 0004_view_ung_vien 0005_view_lich_pv 0006_view_onboard 0007_luu_tru_dung 0008_bucket_cv 0009_stopped_at_khi_nhap)
 
 cat > "$OUT" << 'HEADER'
 -- =====================================================================
 -- DỰNG PROJECT SUPABASE MỚI CHO APP TUYỂN DỤNG DRKAM — DÁN MỘT LẦN
 --
--- File này GỘP SẴN 7 file trong migrations/ theo đúng thứ tự phải chạy:
---   0001_init.sql -> 0002_seed_catalogs.sql -> 0004 -> 0005 -> 0006 -> 0007 -> 0008
+-- File này GỘP SẴN 8 file trong migrations/ theo đúng thứ tự phải chạy:
+--   0001_init.sql -> 0002_seed_catalogs.sql -> 0004 -> 0005 -> 0006 -> 0007 -> 0008 -> 0009
 -- Dán toàn bộ vào Supabase SQL Editor rồi Run một lần là xong, khỏi lo
 -- chạy thiếu file hay sai thứ tự.
 --

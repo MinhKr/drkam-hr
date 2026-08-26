@@ -5,6 +5,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Download, RotateCcw, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input, Select } from "@/components/ui/primitives";
+import { NhapExcelDialog } from "./nhap-excel-dialog";
 import { cn } from "@/lib/utils";
 
 export type NhomChon = {
@@ -138,6 +139,8 @@ export function BoLoc({ nhom, tong }: { nhom: NhomChon; tong: number }) {
           <span className="tabular text-[var(--ink-muted)]">{tong.toLocaleString("vi-VN")}</span>
         </a>
       </Button>
+
+      <NhapExcelDialog />
 
       {dangLoc && (
         <Button

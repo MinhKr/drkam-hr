@@ -138,9 +138,23 @@ trong `web/supabase/migrations/` rồi Run, mỗi file một lần.
 |---|---|---|
 | `0007_luu_tru_dung.sql` | Thêm cột `stopped_at` cho khu lưu trữ của cột Dừng | Bảng giai đoạn vẫn chạy, hiện thẻ vàng *"Còn thiếu một bước cài đặt"*, chưa có khu lưu trữ |
 | `0008_bucket_cv.sql` | Tạo bucket Storage `cv-ung-vien` để đính file CV | Đính file CV báo lỗi nhắc chạy file này; ô Link CV vẫn dùng bình thường |
+| `0009_stopped_at_khi_nhap.sql` | Cho phép chỉ định sẵn mốc dừng khi chèn hồ sơ | **Nhập Excel** vẫn chạy, nhưng hồ sơ cũ đã loại đổ hết vào cột Dừng thay vì vào khu lưu trữ |
 
-Cả hai file đều chỉ **thêm** chứ không xoá hay sửa dữ liệu sẵn có, chạy nhầm hai lần cũng không sao.
-`0008` không đụng tới bảng nào — nó chỉ tạo chỗ chứa file và phân quyền cho chỗ đó.
+Cả ba file đều chỉ **thêm** chứ không xoá hay sửa dữ liệu sẵn có, chạy nhầm hai lần cũng không sao.
+`0008` không đụng tới bảng nào — nó chỉ tạo chỗ chứa file và phân quyền cho chỗ đó. `0009` chỉ sửa
+lại một hàm trigger, không thêm cột cũng không đụng dòng nào; cuối file có đoạn tự kiểm, chạy xong
+thấy `0009 OK` là được.
+
+### Vì sao nhập Excel lại cần sửa trigger
+
+Trigger `candidates_stopped` (do `0007` tạo) đặt mốc dừng là **lúc chèn dòng**. Với thao tác tay thì
+đúng: HR loại ai lúc nào, mốc là lúc đó. Nhưng nạp bù dữ liệu cũ thì hàng trăm hồ sơ đã loại từ
+tháng 2 sẽ cùng nhận mốc "hôm nay" rồi đổ hết vào cột **Dừng** — đúng cái cột mà `0007` sinh ra để
+dọn cho gọn.
+
+`0009` sửa để trigger chỉ tự đặt mốc khi dòng chèn vào **chưa nói rõ mốc**. Bộ nhập Excel điền
+`stopped_at` theo ngày nhận CV nên hồ sơ cũ vào thẳng khu lưu trữ. Form thêm hồ sơ bằng tay không
+gửi `stopped_at` nên chạy y như trước.
 
 ### Vì sao bucket CV để công khai
 

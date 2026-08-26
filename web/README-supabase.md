@@ -43,7 +43,7 @@ Chờ khoảng 2 phút cho project khởi tạo xong.
 
 **SQL Editor** ở thanh trái → mở **`web/supabase/setup_project_moi.sql`** → copy toàn bộ → dán vào → **Run**.
 
-File đó gộp sẵn 7 file migration theo đúng thứ tự, dán một lần là xong. Supabase chạy cả file trong một
+File đó gộp sẵn 8 file migration theo đúng thứ tự, dán một lần là xong. Supabase chạy cả file trong một
 giao dịch nên hỏng giữa đường thì huỷ sạch, không để lại cơ sở dữ liệu nửa vời. **Đừng bôi đen chạy từng
 đoạn** — làm vậy mất cả tính chất đó lẫn dòng kiểm tra an toàn.
 
@@ -61,13 +61,15 @@ giao dịch nên hỏng giữa đường thì huỷ sạch, không để lại c
 | 5 | `migrations/0006_view_onboard.sql` | View `v_onboard` cho màn hình Onboard |
 | 6 | `migrations/0007_luu_tru_dung.sql` | Cột `stopped_at` + khu lưu trữ của cột Dừng |
 | 7 | `migrations/0008_bucket_cv.sql` | Bucket `cv-ung-vien` để chứa file CV tải lên |
+| 8 | `migrations/0009_stopped_at_khi_nhap.sql` | Cho phép chỉ định sẵn mốc dừng — cần cho nhập Excel |
 
-**Phải chạy `0001` đầu tiên** — nó tạo hàm kiểm tra mà 6 file sau đều gọi. Sai thứ tự sẽ gặp lỗi
+**Phải chạy `0001` đầu tiên** — nó tạo hàm kiểm tra mà 7 file sau đều gọi. Sai thứ tự sẽ gặp lỗi
 `function public.f_kiem_tra_project() does not exist`; đó là dấu hiệu bỏ qua `0001` chứ không phải file lỗi.
 
 Thiếu file nào thì màn hình tương ứng báo *"v_… không tồn tại"* — bỏ sót `0006` là trang Onboard trắng.
 Bỏ sót `0007` thì Bảng giai đoạn vẫn chạy nhưng báo *"Còn thiếu một bước cài đặt"* và không có khu lưu trữ.
 Bỏ sót `0008` thì đính file CV báo lỗi nhắc chạy file đó; ô Link CV vẫn dùng bình thường.
+Bỏ sót `0009` thì nhập Excel vẫn chạy, nhưng hồ sơ cũ đã loại sẽ đổ vào cột Dừng thay vì vào khu lưu trữ.
 
 </details>
 
@@ -75,7 +77,7 @@ Bỏ sót `0008` thì đính file CV báo lỗi nhắc chạy file đó; ô Link
 project với app cũ. Project này chỉ có tài khoản do bạn tự tạo nên không cần lớp đó nữa. Muốn thêm một
 lớp nữa thì đọc phần đầu file rồi chạy.
 
-Xong 7 file, vào **Table Editor** (schema `public`) sẽ thấy: `candidates`, `interviews`, `onboardings`,
+Xong 8 file, vào **Table Editor** (schema `public`) sẽ thấy: `candidates`, `interviews`, `onboardings`,
 `catalogs`, `activity_log`. Vào **Storage** sẽ thấy thêm một bucket tên `cv-ung-vien` — chỗ chứa file CV
 tải lên, do `0008` tạo.
 
@@ -94,6 +96,7 @@ nó** — chạy đúng file mới trong `migrations/` là đủ, mỗi file ch�
 |---|---|---|
 | `0007_luu_tru_dung.sql` | Muốn cột **Dừng** của Bảng giai đoạn tự dọn hồ sơ cũ xuống khu lưu trữ | Thêm cột `stopped_at`, điền sẵn mốc cho hồ sơ đã dừng. Không xoá, không sửa dòng nào khác. |
 | `0008_bucket_cv.sql` | Muốn đính thẳng file CV lên hệ thống thay vì chỉ dán link | Tạo bucket Storage `cv-ung-vien` và phân quyền cho nó. **Không đụng gì tới bảng dữ liệu.** |
+| `0009_stopped_at_khi_nhap.sql` | Trước khi dùng **Nhập Excel** để nạp bù hồ sơ cũ | Sửa một trigger. Không thêm cột, không sửa dòng nào. Cuối file có đoạn tự kiểm, chạy xong hiện `0009 OK`. |
 
 Cách chạy: **SQL Editor** → mở file → copy toàn bộ → dán → **Run**, y như Bước 2. Chạy nhầm hai lần cũng
 không sao, các câu lệnh đều viết kiểu chạy lại được (`if not exists`, `create or replace`).
