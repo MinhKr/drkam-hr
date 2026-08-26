@@ -74,38 +74,53 @@ App không có chỗ tự đăng ký, nên mọi tài khoản đều phải tạ
 Cũng ở **Authentication → Users**, mở người đó ra và đặt mật khẩu mới. App chưa có luồng "quên mật
 khẩu" tự gửi mail.
 
-### Thêm giá trị vào danh mục — *hiện phải làm bằng tay*
+### Thêm, sửa, ẩn, xoá danh mục — *làm thẳng trong app*
 
-Màn hình **Danh mục** trong app **chỉ để xem**, chưa sửa được (xem mục 6). Cần thêm một vị trí,
-một nguồn CV hay một người phỏng vấn thì vào Supabase → **Table Editor → `catalogs` → Insert row**:
+Màn hình **Danh mục** trong app tự sửa được, không phải vào Supabase nữa. Mỗi thẻ có nút **+** để
+thêm, mỗi dòng có menu **⋮** với *Sửa · Ẩn · Xoá hẳn*. Thứ tự trong ô chọn thì **kéo dòng** bằng
+tay nắm bên trái. Cần file `0010_danh_muc_crud.sql` (xem mục 3).
 
-| Cột | Điền |
+Con số mờ bên phải mỗi dòng là **số hồ sơ đang dùng** giá trị đó — nhìn trước khi xoá.
+
+**Ẩn khác xoá.** *Ẩn* làm giá trị biến mất khỏi mọi ô chọn nhưng hồ sơ cũ vẫn đọc được bình thường,
+kể cả Bảng giai đoạn vẫn xếp đúng cột. *Xoá hẳn* thì hồ sơ cũ vẫn giữ nguyên chữ đó nhưng chữ đó
+không còn trong danh mục: mở hồ sơ ra ô chọn trống, bộ lọc mất mục đó. **Với giá trị đang có hồ sơ
+dùng thì ẩn gần như luôn là lựa chọn đúng.**
+
+**Đổi tên thì kéo theo hồ sơ cũ.** Đổi "Sale On" thành "Sale Online" là app cập nhật luôn mọi hồ sơ
+đang mang chữ cũ, trong cùng một giao dịch — hỏng giữa chừng thì huỷ sạch. Phải làm vậy vì hồ sơ lưu
+chuỗi thô chứ không trỏ khoá ngoại về danh mục (xem `0001_init.sql`).
+
+**Ba loại chỉ để xem**, hiện hình ổ khoá và ghi rõ lý do ngay trên thẻ:
+
+| Loại | Vì sao khoá |
 |---|---|
-| `type` | khoá loại danh mục, xem bảng dưới |
-| `value` | đúng chữ sẽ hiện trong ô chọn, có dấu |
-| `sort_order` | số thứ tự trong ô chọn, để 0 cũng được |
-| `active` | `true` |
-| `meta` | thường để `{}` — trừ hai loại nói ở dưới |
+| `stage` | 5 giai đoạn phễu nằm cứng trong code: kiểu `GiaiDoan`, cột của Bảng giai đoạn, màu nhãn trạng thái |
+| `onboard_task` | Khoá của 17 mục việc chính là khoá đang lưu trong `onboardings.checklist` của từng ca onboard |
+| `onboard_task_group` | Nhóm việc gắn với checklist onboard đã lưu |
 
-Khoá `type` hay dùng: `position` (vị trí ứng tuyển) · `department` (phòng ban) · `level` (cấp bậc) ·
-`cv_status` (trạng thái CV) · `source` (nguồn CV) · `interviewer` (người phỏng vấn) ·
-`screener` (người sàng lọc) · `interview_mode` (hình thức PV) · `offer_status` ·
-`onboard_owner` · `onboard_office` · `region` · `province` · `gender`.
-Danh sách đầy đủ nằm trong `NHAN_LOAI_DANH_MUC` ở [web/src/lib/danh-muc.ts](web/src/lib/danh-muc.ts).
+Sửa ba loại này vẫn phải qua migration. Chặn nằm ở **cả server action lẫn hàm SQL**, không chỉ ở nút
+bấm — ẩn nút thôi thì lời gọi vẫn tới thẳng được.
 
-Hai loại cần điền `meta`:
+**Hai loại phải điền thêm ô:**
 
-- `position` → `{"department": "Marketing", "level": "Nhân viên"}`
-  Nhờ nó mà chọn vị trí là tự điền phòng ban và cấp bậc.
-- `cv_status` → `{"stage": "phong_van"}`
-  Quyết định trạng thái đó nằm ở cột nào của Bảng giai đoạn. Giá trị hợp lệ:
-  `moi_ve`, `phong_van`, `cho_quyet_dinh`, `nhan_viec`, `dung`.
+- `position` → Phòng ban + Cấp bậc. Nhờ nó mà chọn vị trí là tự điền hai ô kia khi thêm hồ sơ.
+- `cv_status` → Giai đoạn phễu, **bắt buộc**. Quyết định trạng thái đó nằm ở cột nào của Bảng giai
+  đoạn. Chọn *Dừng* thì hồ sơ chuyển sang trạng thái đó được ghi mốc `stopped_at` và sau **1 ngày**
+  tự rơi xuống khu *Đã dừng từ trước*.
 
-Thiếu `meta` thì không hỏng gì, chỉ mất phần tự điền, và trạng thái mới sẽ rơi vào cột *Mới về*.
+Mọi thay đổi danh mục đều được ghi vào `activity_log` (trigger `catalogs_log`), kể cả thay đổi làm
+thẳng trong Supabase.
 
-> Đặt `stage` là `dung` còn có tác dụng khác: hồ sơ chuyển sang trạng thái đó sẽ được ghi mốc
-> `stopped_at`, và sau **1 ngày** tự rơi xuống khu *Đã dừng từ trước* dưới Bảng giai đoạn. Trigger
-> tra thẳng `meta.stage` trong bảng `catalogs` nên sửa ở đây là có hiệu lực ngay, không phải deploy lại.
+### Vẫn sửa được bằng tay trong Supabase
+
+Table Editor → `catalogs` → Insert row, nếu cần. Cột: `type` (khoá loại, xem
+`NHAN_LOAI_DANH_MUC` ở [web/src/lib/danh-muc.ts](web/src/lib/danh-muc.ts)) · `value` (đúng chữ hiện
+trong ô chọn, có dấu) · `sort_order` · `active` = `true` · `meta` thường để `{}`.
+
+Nhưng **đổi tên thì đừng làm ở đây**: sửa `value` bằng tay chỉ đổi mỗi danh mục, hồ sơ cũ giữ chữ cũ
+và thành mồ côi. Dùng nút Sửa trong app, hoặc gọi
+`select public.f_danh_muc_doi_ten('position', 'tên cũ', 'tên mới');` trong SQL Editor.
 
 ### Xoá dữ liệu thử để nhập lại từ đầu
 
@@ -139,11 +154,13 @@ trong `web/supabase/migrations/` rồi Run, mỗi file một lần.
 | `0007_luu_tru_dung.sql` | Thêm cột `stopped_at` cho khu lưu trữ của cột Dừng | Bảng giai đoạn vẫn chạy, hiện thẻ vàng *"Còn thiếu một bước cài đặt"*, chưa có khu lưu trữ |
 | `0008_bucket_cv.sql` | Tạo bucket Storage `cv-ung-vien` để đính file CV | Đính file CV báo lỗi nhắc chạy file này; ô Link CV vẫn dùng bình thường |
 | `0009_stopped_at_khi_nhap.sql` | Cho phép chỉ định sẵn mốc dừng khi chèn hồ sơ | **Nhập Excel** vẫn chạy, nhưng hồ sơ cũ đã loại đổ hết vào cột Dừng thay vì vào khu lưu trữ |
+| `0010_danh_muc_crud.sql` | View đếm số hồ sơ dùng mỗi danh mục + hàm đổi tên kéo theo hồ sơ + hàm sắp xếp + nhật ký danh mục | Màn hình **Danh mục** vẫn thêm/ẩn/xoá được nhưng không hiện số hồ sơ đang dùng, **không đổi tên và không kéo sắp xếp được** |
 
-Cả ba file đều chỉ **thêm** chứ không xoá hay sửa dữ liệu sẵn có, chạy nhầm hai lần cũng không sao.
+Cả bốn file đều chỉ **thêm** chứ không xoá hay sửa dữ liệu sẵn có, chạy nhầm hai lần cũng không sao.
 `0008` không đụng tới bảng nào — nó chỉ tạo chỗ chứa file và phân quyền cho chỗ đó. `0009` chỉ sửa
 lại một hàm trigger, không thêm cột cũng không đụng dòng nào; cuối file có đoạn tự kiểm, chạy xong
-thấy `0009 OK` là được.
+thấy `0009 OK` là được. `0010` cũng vậy: thêm một view, hai hàm, một trigger, không đụng cột hay
+dòng nào; chạy xong thấy `0010 OK`.
 
 ### Vì sao nhập Excel lại cần sửa trigger
 
@@ -190,7 +207,7 @@ Thật sự cần đính file nặng hơn thì phải đổi cách làm: cho tr�
 
 | # | Việc | Vì sao đáng làm | Ước lượng |
 |---|---|---|---|
-| 1 | **Sửa danh mục trong app** | Đang phải vào Supabase Table Editor. HR tuyển vị trí mới là phải nhờ kỹ thuật | nửa ngày |
+| ✅ | ~~**Sửa danh mục trong app**~~ | Xong ngày 8 — xem mục 4 | — |
 | 2 | **Bỏ vòng mạng khi xác thực** | `proxy.ts` gọi `auth.getUser()` mỗi request, tốn 200–270ms mỗi lần chuyển tab. Đổi sang `getClaims()` + chuyển JWT sang khoá bất đối xứng trong Supabase | 2 giờ |
 | 3 | **Hoãn `layLichTheoUngVien`** | Thêm ~170ms cho trang Quản lý CV mà chỉ hộp thoại hồ sơ dùng tới | 1 giờ |
 | 4 | Quên mật khẩu tự gửi mail | Đang phải nhờ kỹ thuật đặt lại tay | 2 giờ |

@@ -115,6 +115,7 @@ Trên project mới thì chưa file nào chạy. **`0001` phải chạy đầu t
 | 6 | `0007_luu_tru_dung.sql` | Cột `stopped_at` + dựng lại `v_ung_vien` — cho khu lưu trữ cột Dừng | ⬜ |
 | 7 | `0008_bucket_cv.sql` | Bucket Storage `cv-ung-vien` + phân quyền — cho file CV tải lên | ⬜ |
 | 8 | `0009_stopped_at_khi_nhap.sql` | Trigger tôn trọng mốc dừng chỉ định sẵn — cho nhập Excel | ⬜ |
+| 9 | `0010_danh_muc_crud.sql` | View đếm hồ sơ dùng + hàm đổi tên + hàm sắp xếp + nhật ký — cho quản lý Danh mục | ⬜ |
 | — | `0003_gioi_han_hr.sql` | Danh sách email HR được phép | không cần nữa (xem dưới) |
 
 `0003` sinh ra hồi dùng chung project, khi mọi tài khoản của công ty đều đăng nhập được. Project riêng
@@ -271,6 +272,59 @@ Hằng số để riêng ở [han-muc-nhap.ts](web/src/lib/han-muc-nhap.ts) vì 
 Kèm route `/ung-vien/mau-nhap` tải file mẫu chỉ có dòng tiêu đề, dựng từ cùng danh sách cột với bộ
 đọc nên không thể lệch nhau.
 
+### Ngày 8 — HR tự sửa Danh mục, thôi phụ thuộc dev (`/danh-muc`)
+Màn hình Danh mục trước nay **chỉ để xem**: 237 giá trị nạp sẵn từ Excel, muốn thêm một vị trí tuyển
+dụng hay một người phỏng vấn là phải nhờ kỹ thuật vào Supabase Table Editor gõ tay. Đây là việc số 1
+trong danh sách sau go-live của BAN-GIAO.md. Nay thêm/sửa/ẩn/xoá ngay tại chỗ.
+
+**Quyền thì không phải thêm gì.** Policy `hr_all` của `0001` vốn đã cho `authenticated` toàn quyền
+trên `catalogs` — chặn xưa nay chỉ nằm ở giao diện. Cái thật sự thiếu là hai thứ dưới đây, và cả hai
+đều sinh ra từ một quyết định cũ: **hồ sơ lưu chuỗi thô, không trỏ khoá ngoại về danh mục**.
+
+**Đổi tên phải kéo theo hồ sơ cũ.** Đổi `catalogs.value` từ "Sale On" sang "Sale Online" mà không
+đụng `candidates` thì 34 hồ sơ cũ vẫn mang chữ cũ: lọc theo vị trí mới không thấy chúng, và nếu là
+Trạng thái CV thì Bảng giai đoạn xếp sai cột luôn. Hàm `f_danh_muc_doi_ten` đổi danh mục rồi cập nhật
+mọi cột đang giữ chuỗi đó trong **cùng một giao dịch**. Sửa `catalogs` **trước** là có chủ đích:
+vướng `unique (type, value)` — tên mới đã có người dùng — thì lỗi bật ra lúc chưa đụng hồ sơ nào.
+Đổi tên phòng ban hay cấp bậc còn phải sửa cả `meta` của các vị trí trỏ tới nó, không thì tính năng
+tự điền sẽ điền ra một tên đã chết.
+
+**Xoá phải nhìn được hậu quả.** View `v_danh_muc` đếm sẵn số hồ sơ đang dùng mỗi giá trị, một lượt
+cho cả 237 dòng thay vì hỏi từng giá trị một. Đếm theo **hồ sơ** chứ không theo lượt: một buổi PV ghi
+3 người thì mỗi người tính 1, một ca onboard để cùng một HR ở cả 4 ô phụ trách vẫn chỉ tính 1. Hộp
+thoại xoá nói thẳng "34 hồ sơ đó vẫn giữ chữ cũ nhưng chữ đó không còn trong danh mục", và đặt nút
+**Ẩn thay vì xoá** ngay cạnh nút xoá.
+
+**Thứ tự thì kéo, không bấm.** Ban đầu làm hai mục *Đưa lên trên / Đưa xuống dưới* trong menu, nhưng
+với 49 vị trí thì đưa một dòng từ cuối lên đầu là hơn 40 lần bấm — vô dụng đúng chỗ cần nhất. Nay kéo
+bằng tay nắm bên trái mỗi dòng (`@dnd-kit/sortable`, sẵn có từ Bảng giai đoạn). Thả ra là thấy đổi
+ngay rồi mới ghi; ghi không được thì trả về đúng dãy trước khi kéo kèm lời báo.
+
+Gửi lên **nguyên dãy id theo thứ tự mới** chứ không gửi "kéo id X tới vị trí 4": máy chủ khỏi phải
+đoán lại danh sách lúc đó gồm những gì, và hai người cùng kéo một lúc thì người sau ghi đè bằng thứ
+tự mình đang nhìn, chứ không ra một thứ tự lai không ai muốn. Không dùng `upsert` được — PostgREST
+gửi `INSERT ... ON CONFLICT`, mà Postgres kiểm `not null` của cả dòng insert trước khi xử lý conflict,
+nên gửi mỗi `{id, sort_order}` là vướng `type`/`value` ngay.
+
+**Khoá 3 loại trong 19.** `stage` vì 5 khoá giai đoạn nằm cứng trong code; `onboard_task` và
+`onboard_task_group` vì `meta.key` của chúng chính là khoá đang lưu trong `onboardings.checklist` của
+từng ca onboard đã chạy. Chặn ở **cả server action lẫn hàm SQL**, không chỉ ẩn nút — ẩn nút thôi thì
+lời gọi Server Action vẫn tới thẳng được.
+
+**Lỗi có sẵn sửa luôn:** `banDoGiaiDoan` xưa nay chỉ đọc danh mục `active = true`. Chưa ai ẩn được gì
+nên chưa lộ, nhưng ngày HR bấm Ẩn một Trạng thái CV thì mọi hồ sơ mang trạng thái đó **lặng lẽ nhảy
+về cột Mới về** — `banDo[uv.status] ?? "moi_ve"`. Nay tầng đọc lấy cả dòng ẩn, việc lọc chuyển xuống
+`layTheoLoai`; ẩn giờ đúng nghĩa "đừng cho chọn nữa", hồ sơ cũ vẫn nằm đúng chỗ.
+
+**Nhật ký dùng lại trigger cũ.** Định cho server action tự ghi vào `activity_log` thì phát hiện bảng
+đó chỉ có policy **SELECT** cho `authenticated` — câu insert sẽ bị RLS chặn lặng lẽ, tưởng ghi được
+mà không ghi gì. Hàm `tg_activity_log()` của `0001` vốn đã `security definer` và đọc tên bảng từ
+`tg_table_name`, chỉ là hồi đó không gắn cho `catalogs`. Gắn thêm trigger là xong, lại bắt được cả
+thay đổi làm thẳng trong Supabase.
+
+Bỏ `router.refresh()` sau mỗi thao tác: doc của Next 16 nói `revalidatePath` đã dựng lại trang ngay
+trong lượt trả về của chính Server Action đó, thêm refresh chỉ là một vòng gọi máy chủ thừa.
+
 ---
 
 ## Tốc độ chuyển tab — số đo thật (17/08)
@@ -369,7 +423,7 @@ phân quyền theo phòng ban · giao diện riêng cho điện thoại
 | Lệnh | Việc |
 |---|---|
 | `python tools/gen_seed.py` | Đọc lại Excel → sinh `0002_seed_catalogs.sql` + `catalogs.json` |
-| `bash tools/gop_sql.sh` | Gộp 8 file migration → `web/supabase/setup_project_moi.sql` |
+| `bash tools/gop_sql.sh` | Gộp 9 file migration → `web/supabase/setup_project_moi.sql` |
 
 Sửa file nào trong `web/supabase/migrations/` thì **chạy lại `tools/gop_sql.sh`**, không thì
 `setup_project_moi.sql` vẫn giữ bản cũ.

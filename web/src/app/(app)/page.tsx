@@ -39,7 +39,9 @@ export default async function TrangTongQuan() {
     taoSupabaseServer(),
   ]);
 
+  // chỉ đếm giá trị đang hiện — danh mục bị ẩn không còn là lựa chọn nữa
   const theoLoai = danhMuc.reduce<Record<string, number>>((acc, c) => {
+    if (c.active === false) return acc;
     acc[c.type] = (acc[c.type] ?? 0) + 1;
     return acc;
   }, {});

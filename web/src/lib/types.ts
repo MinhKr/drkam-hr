@@ -30,6 +30,13 @@ export type DanhMuc = {
   meta: Record<string, string>;
 };
 
+/**
+ * Danh mục kèm số hồ sơ đang dùng, đọc từ view `v_danh_muc` của 0010.
+ * `so_dung = null` nghĩa là chưa chạy 0010 nên chưa đếm được, khác hẳn
+ * với `so_dung = 0` — chưa ai dùng, xoá thoải mái.
+ */
+export type DanhMucQuanLy = DanhMuc & { so_dung: number | null };
+
 export type GiaiDoan = "moi_ve" | "phong_van" | "cho_quyet_dinh" | "nhan_viec" | "dung";
 
 export const GIAI_DOAN: { key: GiaiDoan; ten: string }[] = [

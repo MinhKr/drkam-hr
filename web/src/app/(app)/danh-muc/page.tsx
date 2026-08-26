@@ -1,5 +1,11 @@
-import { Badge, Card, CardBody, CardHeader, CardTitle } from "@/components/ui/primitives";
-import { NHAN_LOAI_DANH_MUC, layDanhMucCoNguon } from "@/lib/danh-muc";
+import { Badge, Card, CardBody } from "@/components/ui/primitives";
+import { QuanLyDanhMuc, type NhomDanhMuc } from "@/components/danh-muc/quan-ly-danh-muc";
+import {
+  CHO_DUNG_DANH_MUC,
+  LY_DO_KHOA,
+  NHAN_LOAI_DANH_MUC,
+  layDanhMucQuanLy,
+} from "@/lib/danh-muc";
 
 export const metadata = { title: "Danh mục" };
 
@@ -26,26 +32,31 @@ const THU_TU = [
 ];
 
 export default async function TrangDanhMuc() {
-  const { muc: tatCa, nguon, loi } = await layDanhMucCoNguon();
+  const { muc: tatCa, nguon, coSoDung, loi } = await layDanhMucQuanLy();
 
-  const nhom = THU_TU.map((loai) => ({
+  const nhom: NhomDanhMuc[] = THU_TU.map((loai) => ({
     loai,
     nhan: NHAN_LOAI_DANH_MUC[loai] ?? loai,
+    khoa: LY_DO_KHOA[loai] ?? null,
+    choDung: CHO_DUNG_DANH_MUC[loai] ?? "các ô chọn của app",
     muc: tatCa.filter((c) => c.type === loai),
   })).filter((n) => n.muc.length > 0);
+
+  // Gợi ý cho hai ô chọn trong hộp thoại sửa vị trí — lấy sẵn ở đây cho khỏi
+  // phải gọi thêm một lượt máy chủ lúc mở hộp thoại
+  const dsTheoLoai = (loai: string) =>
+    tatCa.filter((c) => c.type === loai && c.active !== false).map((c) => c.value);
 
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-[var(--ink)]">
-            Danh mục
-          </h1>
+          <h1 className="text-2xl font-bold tracking-tight text-[var(--ink)]">Danh mục</h1>
           <p className="mt-1 max-w-2xl text-base text-[var(--ink-muted)]">
-            Toàn bộ giá trị dùng cho các ô chọn trong app, nạp sẵn từ file Excel. Màn hình này
-            hiện <span className="font-medium text-[var(--ink-2)]">chỉ để xem</span> — cần thêm
-            vị trí, nguồn CV hay người phỏng vấn mới thì nhờ người phụ trách kỹ thuật thêm trong
-            Supabase, chưa sửa được trực tiếp ở đây.
+            Toàn bộ giá trị dùng cho các ô chọn trong app. Thêm, sửa, ẩn hay xoá ngay tại đây —
+            không phải nhờ người kỹ thuật nữa. <b className="font-medium text-[var(--ink-2)]">Kéo</b>{" "}
+            một dòng để đổi thứ tự nó xuất hiện trong ô chọn. Số bên phải mỗi dòng là{" "}
+            <span className="font-medium text-[var(--ink-2)]">số hồ sơ đang dùng</span> giá trị đó.
           </p>
         </div>
         {nguon === "co_so_du_lieu" ? (
@@ -64,9 +75,10 @@ export default async function TrangDanhMuc() {
               Danh mục chưa nằm trong cơ sở dữ liệu
             </p>
             <p className="mt-1 text-sm text-[var(--ink-muted)]">
-              Màn hình vẫn hiển thị đủ nhờ bản sao trong máy, nhưng khi thêm ứng viên sẽ không lưu
-              được. Chạy file <span className="code">web/supabase/migrations/0002_seed_catalogs.sql</span>{" "}
-              trong Supabase SQL Editor rồi tải lại trang.
+              Màn hình vẫn hiển thị đủ nhờ bản sao trong máy, nhưng chưa sửa được gì và khi thêm
+              ứng viên cũng không lưu được. Chạy file{" "}
+              <span className="code">web/supabase/migrations/0002_seed_catalogs.sql</span> trong
+              Supabase SQL Editor rồi tải lại trang.
               {loi && (
                 <span className="mt-1 block text-xs text-[var(--ink-faint)]">Lý do: {loi}</span>
               )}
@@ -75,45 +87,63 @@ export default async function TrangDanhMuc() {
         </Card>
       )}
 
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-        {nhom.map(({ loai, nhan, muc }) => (
-          <Card key={loai} className="flex flex-col">
-            <CardHeader className="border-b border-[var(--line)]">
-              <div className="flex flex-col">
-                <CardTitle>{nhan}</CardTitle>
-                <span className="text-2xs uppercase tracking-[0.1em] text-[var(--ink-faint)]">
-                  {loai}
-                </span>
-              </div>
+      {nguon === "co_so_du_lieu" && !coSoDung && (
+        <Card className="border-[var(--warning)]">
+          <CardBody className="pt-5">
+            <p className="text-base font-medium text-[var(--ink)]">Còn thiếu một bước cài đặt</p>
+            <p className="mt-1 text-sm text-[var(--ink-muted)]">
+              Thêm, ẩn, xoá thì vẫn làm được, nhưng chưa đếm được mỗi giá trị đang có bao nhiêu hồ
+              sơ dùng, và <b>chưa đổi tên hay kéo sắp xếp được</b> — hai việc đó phải chạy trong một
+              giao dịch dưới cơ sở dữ liệu nên cần hàm riêng. Chạy file{" "}
+              <span className="code">web/supabase/migrations/0010_danh_muc_crud.sql</span> trong
+              Supabase SQL Editor rồi tải lại trang.
+              {loi && (
+                <span className="mt-1 block text-xs text-[var(--ink-faint)]">Lý do: {loi}</span>
+              )}
+            </p>
+          </CardBody>
+        </Card>
+      )}
+
+      {nguon === "du_phong" ? (
+        <ChiXem nhom={nhom} />
+      ) : (
+        <QuanLyDanhMuc
+          nhom={nhom}
+          phongBan={dsTheoLoai("department")}
+          capBac={dsTheoLoai("level")}
+        />
+      )}
+    </div>
+  );
+}
+
+/**
+ * Chưa nối được cơ sở dữ liệu thì bày đúng bản dự phòng, không nút nào —
+ * bấm cũng chẳng lưu được vào đâu.
+ */
+function ChiXem({ nhom }: { nhom: NhomDanhMuc[] }) {
+  return (
+    <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+      {nhom.map(({ loai, nhan, muc }) => (
+        <Card key={loai} className="flex flex-col">
+          <CardBody className="max-h-[280px] overflow-y-auto pt-4">
+            <div className="mb-2 flex items-center justify-between gap-2">
+              <span className="font-semibold text-[var(--ink)]">{nhan}</span>
               <Badge tone="neutral" className="tabular">
                 {muc.length}
               </Badge>
-            </CardHeader>
-            <CardBody className="max-h-[280px] overflow-y-auto pt-4">
-              <ul className="flex flex-col gap-1.5">
-                {muc.map((m) => (
-                  <li
-                    key={m.value}
-                    className="flex items-start justify-between gap-3 text-sm"
-                  >
-                    <span className="text-[var(--ink-2)]">{m.value}</span>
-                    {m.meta?.department && (
-                      <span className="shrink-0 text-xs text-[var(--ink-faint)]">
-                        {m.meta.department} · {m.meta.level}
-                      </span>
-                    )}
-                    {m.meta?.stage && (
-                      <span className="shrink-0 text-xs text-[var(--ink-faint)]">
-                        {m.meta.stage}
-                      </span>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </CardBody>
-          </Card>
-        ))}
-      </div>
+            </div>
+            <ul className="flex flex-col gap-1.5">
+              {muc.map((m) => (
+                <li key={m.value} className="text-sm text-[var(--ink-2)]">
+                  {m.value}
+                </li>
+              ))}
+            </ul>
+          </CardBody>
+        </Card>
+      ))}
     </div>
   );
 }
